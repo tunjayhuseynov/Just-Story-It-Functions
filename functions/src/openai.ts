@@ -3,7 +3,7 @@ import { Character, CustomStoryDescriptor, Environment } from "./types/inputs";
 
 export function GenerateStoryFromText(characters: Character[], environments: Environment[], customStoryDescriptor?: CustomStoryDescriptor) {
     let prompt =
-        `You are a storyteller and you have to respond only to a story based on inputs.
+        `You are a storyteller and you have to give only a story based on inputs.
         There are 3 types of input:
         1. Inputs that include characters' names and personalities.
         2. Inputs that describe environments and places.
