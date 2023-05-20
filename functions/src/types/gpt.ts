@@ -1,0 +1,1 @@
+export type GptType = "gpt-4" | "gpt-4-32k" | "gpt-3.5-turbo"

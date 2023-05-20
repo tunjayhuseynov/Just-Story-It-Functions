@@ -1,10 +1,12 @@
 export type Languages = "en-US" | "es-ES" | "fr-FR" | "ru-RU" | "cmn-TW" | "tr-TR"
 
-export type VoiceModels = "WaveNet" | "Standard" | "Neural2"
+export type LanguageLevel = "Beginner" | "Intermadiate" | "Advanced"
+
+export type VoiceModels = "Standard" | "Neural2"
 
 export type GenderType = "MALE" | "FEMALE"
 
-export type LanguageType = { [langauge in Languages]: { language: Languages, model: VoiceModels, modelType: string, gender: GenderType }[] }
+type LanguageType = { [langauge in Languages]: { language: Languages, model: VoiceModels, modelType: string, gender: GenderType }[] }
 
 export const LanguageTypes: LanguageType = {
     "en-US": [

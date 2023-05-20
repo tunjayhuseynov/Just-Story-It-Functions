@@ -4,6 +4,11 @@ export type Character = {
     description: string
 }
 
+export type ReferanceStory = {
+    link: string,
+    title: string
+}
+
 export type Environment = {
     name: string;
     description: string

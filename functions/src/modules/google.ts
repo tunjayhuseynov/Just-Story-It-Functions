@@ -1,7 +1,7 @@
 import textToSpeech from "@google-cloud/text-to-speech"
 import { google } from "@google-cloud/text-to-speech/build/protos/protos";
-import { GenderType, LanguageTypes, Languages, VoiceModels } from "./types/languages";
-
+import { GenderType, LanguageTypes, Languages, VoiceModels } from "../types/languages";
+import * as path from 'path';
 interface IProps {
     text: string,
     languageCode: Languages,
@@ -31,14 +31,16 @@ export async function GenerateAudioLinkFromText({ text, genderType, languageCode
 
 
 
-export async function TextToSpeech({ text, languageCode, genderType, modelType }: IProps): Promise<Buffer> {
+async function TextToSpeech({ text, languageCode, genderType, modelType }: IProps): Promise<Buffer> {
     if (text.length >= 5000) throw new Error("Text's length must be less than 5000 characters")
 
     let model = LanguageTypes[languageCode].find(s => s.gender === genderType && s.modelType === modelType)
 
     if (!model) throw new Error("There is no such a model")
 
-    const client = new textToSpeech.TextToSpeechClient();
+    const client = new textToSpeech.TextToSpeechClient({
+        keyFilename: path.join(__dirname, "./service.json")
+    });
 
     const request: google.cloud.texttospeech.v1.ISynthesizeSpeechRequest = {
         input: { text: text },
