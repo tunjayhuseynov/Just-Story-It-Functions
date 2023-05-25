@@ -1,7 +1,7 @@
 import textToSpeech from "@google-cloud/text-to-speech"
 import { google } from "@google-cloud/text-to-speech/build/protos/protos";
 import { GenderType, LanguageTypes, Languages, VoiceModels } from "../types/languages";
-import * as path from 'path';
+// import * as path from 'path';
 interface IProps {
     text: string,
     languageCode: Languages,
@@ -38,9 +38,9 @@ async function TextToSpeech({ text, languageCode, genderType, modelType }: IProp
 
     if (!model) throw new Error("There is no such a model")
 
-    const client = new textToSpeech.TextToSpeechClient({
-        keyFilename: path.join(__dirname, "./service.json")
-    });
+    const client = new textToSpeech.TextToSpeechClient(
+        // { keyFilename: path.join(__dirname, "./service.json") }
+    );
 
     const request: google.cloud.texttospeech.v1.ISynthesizeSpeechRequest = {
         input: { text: text },
@@ -49,7 +49,15 @@ async function TextToSpeech({ text, languageCode, genderType, modelType }: IProp
     };
 
     const [response] = await client.synthesizeSpeech(request, {
-        maxRetries: 5,
+        maxRetries: 20,
+        retry: {
+            backoffSettings: {
+                maxRetries: 20,
+                initialRetryDelayMillis: 5000,
+                maxRetryDelayMillis: 5000,
+                retryDelayMultiplier: 1.5
+            }
+        }
     })
 
     if (!response.audioContent) throw new Error("Response is null")

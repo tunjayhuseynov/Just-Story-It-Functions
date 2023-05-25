@@ -1,7 +1,7 @@
 import { onCall } from "firebase-functions/v2/https";
 import { Character, CustomStoryDescriptor, Environment, ReferanceStory } from "../types/inputs";
 import { GenderType, LanguageLevel, Languages } from "../types/languages";
-import { AddStoryToUser, getUserFromDB } from "../services/user";
+import { AddStoryToUser, getUserFromDB, isQuoteSufficient } from "../services/user";
 import { GenerateStory } from "../services/generate";
 import { v1 as uuid } from 'uuid'
 import { IStory } from "../types/story";
@@ -20,10 +20,11 @@ interface IRequest {
 }
 
 interface IResponse {
-    story: IStory
+    story: IStory,
+    newQuote: number
 }
 
-const GetStory = onCall<IRequest, Promise<IResponse>>(async (request) => {
+export const GetStory = onCall<IRequest, Promise<IResponse>>(async (request) => {
     let uid = request.auth?.uid;
 
     if (!uid) throw new Error("Authorization is mandatory")
@@ -33,6 +34,8 @@ const GetStory = onCall<IRequest, Promise<IResponse>>(async (request) => {
     if (!user) throw new Error("There is no user with such an id")
 
     let storyId = uuid()
+
+    if (await isQuoteSufficient(uid, request.data.minimumWordCount)) throw new Error("No enough quote")
 
     let { audioFileLink, coverImageLink, storyFileLink, storyTitle, durationInSeconds } = await GenerateStory({
         storyId,
@@ -47,6 +50,7 @@ const GetStory = onCall<IRequest, Promise<IResponse>>(async (request) => {
     })
 
     let response: IResponse = {
+        newQuote: 0,
         story: {
             id: storyId,
             created_at: new Date().getTime(),
@@ -63,7 +67,7 @@ const GetStory = onCall<IRequest, Promise<IResponse>>(async (request) => {
         }
     }
 
-    await AddStoryToUser(uid, response.story)
+    response.newQuote = await AddStoryToUser(uid, response.story, request.data.minimumWordCount)
 
     return response;
 })

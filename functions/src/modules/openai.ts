@@ -1,5 +1,5 @@
 import { LanguageName, type Character, type CustomStoryDescriptor, type Environment, ReferanceStory } from "../types/inputs";
-import { ChatCompletionRequestMessage, Configuration, OpenAIApi } from "openai"
+import { ChatCompletionRequestMessage, ChatCompletionResponseMessage, Configuration, OpenAIApi } from "openai"
 import type { LanguageLevel, Languages } from "../types/languages";
 import { GptType } from "../types/gpt";
 
@@ -92,7 +92,7 @@ export async function GenerateStoryFromText(
 
 async function GetCoverImagePromptText(messages: ChatCompletionRequestMessage[], aiModel: IGenerateStoryFromText["aiModel"]) {
     let coverImagePrompt = ""
-    messages.push({ role: "user", content: "I'll create a cover image for this story. I use DALL·E 2. I need a prompt text to describe it to DALL·E 2. Graphic design style must look like Art Deco style. Give me a prompt text directly" })
+    messages.push({ role: "user", content: "I'll create a cover image for this story. I use DALL·E 2. I need a prompt text contains only words to describe it to DALL·E 2. Graphic design style must look like Art Deco style. Give me a maximum 800 character limited prompt text directly" })
     let coverImageReq = await RequestChatGPT(messages, aiModel)
 
     if (coverImageReq) {
@@ -118,7 +118,7 @@ async function GetTitleFromStory(messages: ChatCompletionRequestMessage[], aiMod
     return title;
 }
 
-async function RequestChatGPT(messages: ChatCompletionRequestMessage[], aiModel: IGenerateStoryFromText["aiModel"]) {
+async function RequestChatGPT(messages: ChatCompletionRequestMessage[], aiModel: IGenerateStoryFromText["aiModel"]): Promise<ChatCompletionResponseMessage | undefined> {
     const openai = new OpenAIApi(configuration);
 
     let response = await openai.createChatCompletion({
@@ -126,9 +126,17 @@ async function RequestChatGPT(messages: ChatCompletionRequestMessage[], aiModel:
         messages,
         temperature: 0.4
     })
-    if (response.status != 200) throw new Error(response.statusText)
+    if (response.status != 200 && response.status != 429) throw new Error(response.statusText)
 
-    return response.data.choices[0].message
+    let message = response.data.choices[0].message
+
+    // Bypass Rate Limit
+    if (response.status == 429) {
+        await new Promise((resolve) => setTimeout(resolve, 10000))
+        message = await RequestChatGPT(messages, aiModel)
+    }
+
+    return message
 }
 
 

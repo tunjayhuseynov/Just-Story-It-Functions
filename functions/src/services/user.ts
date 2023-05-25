@@ -1,9 +1,7 @@
-import { firestore } from "firebase-admin";
 import { adminApp } from "../admin";
 import { IStory } from "../types/story";
 import { IUser, IUserHistory } from "../types/user";
 import { AdminCrud } from "./crud";
-
 
 export async function getUserFromAuth(uid: string) {
     try {
@@ -21,28 +19,50 @@ export async function getUserFromDB(uid: string) {
     return users as IUser
 }
 
-export async function AddStoryToUser(uid: string, story: IStory) {
-    let crud = new AdminCrud<IUserHistory>("UserHistories")
+export async function AddStoryToUser(uid: string, story: IStory, predictedWordCount: number) {
+    let historyCrud = new AdminCrud<IUserHistory>("UserHistories")
 
     let data: IUserHistory = {
+        id: story.id,
         story: story,
-        userId: firestore().collection("Users").doc(uid),
-        created_at: new Date().getTime()
+        userId: uid,
+        createdAt: new Date().getTime()
     }
 
-    await crud.Create(data, story.id)
-    await UpdateRemainingQuote(uid, story)
+    await historyCrud.Create(data, story.id)
+    return await UpdateRemainingQuote(uid, story, predictedWordCount)
 }
 
-async function UpdateRemainingQuote(uid: string, story: IStory) {
+async function UpdateRemainingQuote(uid: string, story: IStory, predictedWordCount: number) {
     let user = await getUserFromDB(uid);
 
     if (!user) throw new Error("User not found")
 
     let crud = new AdminCrud<IUser>("Users")
 
+    let duration = user.remaningQuoteInSeconds - (Math.min(CalculateNewQuote(predictedWordCount), story.durationInSeconds))
+
     await crud.Update({
         id: uid,
-        remaningQuoteInSeconds: (user.remaningQuoteInSeconds - story.durationInSeconds + 1)
+        remaningQuoteInSeconds: duration
     })
+
+    return duration
+}
+
+export function CalculateNewQuote(wordCount: number) {
+    let x = 0.384;
+    let len = wordCount;
+    return len * x;
+}
+
+export async function isQuoteSufficient(uid: string, wordCount: number) {
+    let userQuote = await getUserFromDB(uid)
+    if (!userQuote) throw new Error("No User Found")
+
+    let seconds = CalculateNewQuote(wordCount)
+
+    if (userQuote.remaningQuoteInSeconds - seconds < 0) return false
+
+    return true
 }

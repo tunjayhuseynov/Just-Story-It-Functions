@@ -1,7 +1,6 @@
 import { Character, Environment } from "./inputs"
 import { IStory } from "./story"
 import { Subscription } from "./subscription"
-import { firestore } from 'firebase-admin'
 
 
 export interface IUser {
@@ -15,7 +14,8 @@ export interface IUser {
 }
 
 export interface IUserHistory {
-    userId: firestore.DocumentReference,
+    id: string
+    userId: string,
     story: IStory,
-    created_at: number
+    createdAt: number
 }
