@@ -1,4 +1,4 @@
-export type Languages = "en-US" | "es-ES" | "fr-FR" | "ru-RU" | "cmn-TW" | "tr-TR"
+export type Languages = "en-US" | "es-ES" | "fr-FR" | "de-DE" | "it-IT" | "da-DK" | "fil-PH"
 
 export type LanguageLevel = "Beginner" | "Intermadiate" | "Advanced"
 
@@ -35,9 +35,10 @@ export const LanguageTypes: LanguageType = {
             gender: "FEMALE"
         },
     ],
-    "cmn-TW": [],
     "es-ES": [],
+    "da-DK": [],
+    "de-DE": [],
+    "it-IT": [],
+    "fil-PH": [],
     "fr-FR": [],
-    "ru-RU": [],
-    "tr-TR": []
 }

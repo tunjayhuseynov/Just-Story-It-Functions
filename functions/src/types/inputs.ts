@@ -17,10 +17,11 @@ export type Environment = {
 export type CustomStoryDescriptor = string
 
 export const LanguageName: { [n in Languages]: string } = {
-    "cmn-TW": "Chinese",
     "en-US": "English",
     "es-ES": "Spanish",
     "fr-FR": "French",
-    "ru-RU": "Russian",
-    "tr-TR": "Turkish"
+    "da-DK": "Danish",
+    "de-DE": "German",
+    "fil-PH": "Pilipino",
+    "it-IT": "Italian"
 }

@@ -71,7 +71,7 @@ export async function GenerateStoryFromText(
 
         messages.push({ role: "user", content: chapterCountdown === chapters ? prompt : "Next Chapter" })
 
-        let response = await RequestChatGPT(messages, aiModel)
+        let response = await RequestChatGPT(messages, aiModel, 0)
 
         if (response) {
             messages.push(response)
@@ -93,7 +93,7 @@ export async function GenerateStoryFromText(
 async function GetCoverImagePromptText(messages: ChatCompletionRequestMessage[], aiModel: IGenerateStoryFromText["aiModel"]) {
     let coverImagePrompt = ""
     messages.push({ role: "user", content: "I'll create a cover image for this story. I use DALL·E 2. I need a prompt text contains only words to describe it to DALL·E 2. Graphic design style must look like Art Deco style. Give me a maximum 800 character limited prompt text directly" })
-    let coverImageReq = await RequestChatGPT(messages, aiModel)
+    let coverImageReq = await RequestChatGPT(messages, aiModel, 0)
 
     if (coverImageReq) {
         coverImagePrompt = coverImageReq.content;
@@ -107,7 +107,7 @@ async function GetTitleFromStory(messages: ChatCompletionRequestMessage[], aiMod
 
     messages.push({ role: "user", content: prompt })
 
-    let titleReq = await RequestChatGPT(messages, aiModel)
+    let titleReq = await RequestChatGPT(messages, aiModel, 0)
 
     let title = ""
     if (titleReq) {
@@ -118,7 +118,7 @@ async function GetTitleFromStory(messages: ChatCompletionRequestMessage[], aiMod
     return title;
 }
 
-async function RequestChatGPT(messages: ChatCompletionRequestMessage[], aiModel: IGenerateStoryFromText["aiModel"]): Promise<ChatCompletionResponseMessage | undefined> {
+async function RequestChatGPT(messages: ChatCompletionRequestMessage[], aiModel: IGenerateStoryFromText["aiModel"], attemptCount: number): Promise<ChatCompletionResponseMessage | undefined> {
     const openai = new OpenAIApi(configuration);
 
     let response = await openai.createChatCompletion({
@@ -130,10 +130,12 @@ async function RequestChatGPT(messages: ChatCompletionRequestMessage[], aiModel:
 
     let message = response.data.choices[0].message
 
+    if (attemptCount > 10) throw new Error("Attempt limit exceeded")
+
     // Bypass Rate Limit
     if (response.status == 429) {
         await new Promise((resolve) => setTimeout(resolve, 10000))
-        message = await RequestChatGPT(messages, aiModel)
+        message = await RequestChatGPT(messages, aiModel, attemptCount + 1)
     }
 
     return message

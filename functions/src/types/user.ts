@@ -6,11 +6,12 @@ import { Subscription } from "./subscription"
 export interface IUser {
     id: string,
     username: string,
-    name: string
-    subscription: keyof typeof Subscription,
+    name: string | null
+    subscription: (keyof typeof Subscription) | null,
     customCharacters: Character[],
     customEnviornments: Environment[],
-    remaningQuoteInSeconds: number
+    remaningQuoteInSeconds: number,
+    createdAt: number
 }
 
 export interface IUserHistory {

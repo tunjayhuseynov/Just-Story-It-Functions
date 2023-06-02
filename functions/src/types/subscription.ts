@@ -6,6 +6,7 @@ type Subscription = {
     [name: string]: {
         price: number | null,
         maxWordCount: number,
+        maxSecondsPerStory: number,
         freeUsageSecondsAmount: number,
         dialogues: boolean,
         coverImage: boolean,
@@ -22,8 +23,9 @@ type Subscription = {
 export const Subscription: Subscription = {
     "Free": {
         price: null,
-        freeUsageSecondsAmount: 6 * 60,
+        freeUsageSecondsAmount: 9 * 60,
         maxWordCount: 500,
+        maxSecondsPerStory: 3 * 60,
         dialogues: false,
         coverImage: false,
         userHistory: false,
@@ -35,9 +37,10 @@ export const Subscription: Subscription = {
         extraStoryPrice: 0.29
     },
     "The Little Prince": {
-        price: 3.99,
+        price: 2.99,
         freeUsageSecondsAmount: 36 * 60,
         maxWordCount: 1000,
+        maxSecondsPerStory: 6 * 60,
         continuationOfStory: false,
         coverImage: false,
         customCharacterLimit: 3,
@@ -49,9 +52,10 @@ export const Subscription: Subscription = {
         extraStoryPrice: 0.39
     },
     "The Great Gatsby": {
-        price: 7.99,
+        price: 8.99,
         freeUsageSecondsAmount: 120 * 60,
         maxWordCount: 2000,
+        maxSecondsPerStory: 12 * 60,
         continuationOfStory: false,
         coverImage: true,
         customCharacterLimit: 6,
@@ -60,11 +64,13 @@ export const Subscription: Subscription = {
         gptModel: "gpt-3.5-turbo",
         extraStoryPrice: 0.69,
         userHistory: true,
-        voicType: "Basic"
+        voicType: "Advanced"
     },
     "The Prime Shakespeare": {
-        price: 14.99,
-        freeUsageSecondsAmount: 300 * 60,
+        price: 19.99,
+        freeUsageSecondsAmount: 315 * 60,
+        maxWordCount: 3500,
+        maxSecondsPerStory: 21 * 60,
         coverImage: true,
         customCharacterLimit: 12,
         customEnvironmentLimit: 12,
@@ -73,16 +79,16 @@ export const Subscription: Subscription = {
         gptModel: "gpt-4",
         userHistory: true,
         voicType: "Advanced",
-        maxWordCount: 3500,
         continuationOfStory: false,
     },
     "The Greatest of All Time": {
-        price: 99.99,
+        price: 149.99,
         freeUsageSecondsAmount: 1440 * 60,
+        maxWordCount: 6000,
+        maxSecondsPerStory: 36 * 60,
         gptModel: "gpt-4",
         userHistory: true,
         voicType: "Advanced",
-        maxWordCount: 6000,
         customCharacterLimit: 30,
         customEnvironmentLimit: 30,
         dialogues: true,
