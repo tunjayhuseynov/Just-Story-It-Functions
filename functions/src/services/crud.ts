@@ -1,11 +1,11 @@
 import { adminApp } from "../admin";
-import { Collections } from "../types/collections";
+import { CollectionNames } from "../types/collections";
 import ICrud from "../types/crud";
 
 export class AdminCrud<T> implements ICrud<T> {
-    collection: Collections;
+    collection: CollectionNames;
 
-    constructor(collection: Collections) {
+    constructor(collection: CollectionNames) {
         this.collection = collection;
     }
 
@@ -51,7 +51,7 @@ export class AdminCrud<T> implements ICrud<T> {
     }
 
     async Create(data: T, id?: string): Promise<T> {
-        let collection = adminApp
+        const collection = adminApp
             .firestore()
             .collection(this.collection)
         if (id) {

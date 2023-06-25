@@ -8,6 +8,16 @@ export type GenderType = "MALE" | "FEMALE"
 
 type LanguageType = { [langauge in Languages]: { language: Languages, model: VoiceModels, modelType: string, gender: GenderType }[] }
 
+export const LangaugeSecondsToWordsDeltaIndex: { [lan in Languages]: number } = {
+    "en-US": 2.795,
+    "da-DK": 2.795,
+    "de-DE": 2.795,
+    "es-ES": 2.795,
+    "fil-PH": 2.795,
+    "fr-FR": 2.795,
+    "it-IT": 2.795
+}
+
 export const LanguageTypes: LanguageType = {
     "en-US": [
         {

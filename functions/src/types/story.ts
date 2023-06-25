@@ -6,9 +6,10 @@ export interface IStory {
     created_at: number;
     characters: Character[];
     environments: Environment[];
-    customStoryDescriptor?: string;
+    customStoryDescriptor: string | null;
     storyLink: string;
     audioLink: string;
+    genres: string[],
     coverImage: string | null;
     images: string[];
     title: string;

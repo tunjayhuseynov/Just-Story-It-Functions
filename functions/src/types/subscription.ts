@@ -2,9 +2,12 @@ import { GptType } from "./gpt"
 
 type VoicType = "Basic" | "Advanced"
 
-type Subscription = {
+type SubscriptionType = {
     [name: string]: {
+        id: string,
+        name: string,
         price: number | null,
+        discountPercentage: number,
         maxWordCount: number,
         maxSecondsPerStory: number,
         freeUsageSecondsAmount: number,
@@ -16,12 +19,25 @@ type Subscription = {
         voicType: VoicType,
         continuationOfStory: boolean,
         gptModel: GptType,
-        extraStoryPrice: number
+        extraStoryPrice: number,
+        packageColor: string,
+        revenueCat: {
+            identifier: string,
+            identifierMonthly: string,
+            identifierOTP: string,
+        }
     }
 }
 
-export const Subscription: Subscription = {
+export const Subscription: SubscriptionType = {
     "Free": {
+        id: "Free",
+        name: "Free",
+        revenueCat: {
+            identifier: "Free",
+            identifierMonthly: "Free",
+            identifierOTP: "Free"
+        },
         price: null,
         freeUsageSecondsAmount: 9 * 60,
         maxWordCount: 500,
@@ -33,10 +49,19 @@ export const Subscription: Subscription = {
         customEnvironmentLimit: 1,
         voicType: "Basic",
         continuationOfStory: false,
-        gptModel: "gpt-3.5-turbo",
-        extraStoryPrice: 0.29
+        gptModel: "gpt-3.5-turbo-16k",
+        extraStoryPrice: 0.29,
+        packageColor: "#c4c4c4",
+        discountPercentage: 0,
     },
     "The Little Prince": {
+        id: "The Little Prince",
+        name: "The Little Prince",
+        revenueCat: {
+            identifier: "The Little Prince",
+            identifierMonthly: "Monthly",
+            identifierOTP: "OTP",
+        },
         price: 2.99,
         freeUsageSecondsAmount: 36 * 60,
         maxWordCount: 1000,
@@ -46,12 +71,21 @@ export const Subscription: Subscription = {
         customCharacterLimit: 3,
         customEnvironmentLimit: 3,
         dialogues: false,
-        gptModel: "gpt-3.5-turbo",
+        gptModel: "gpt-3.5-turbo-16k",
         userHistory: true,
         voicType: "Basic",
-        extraStoryPrice: 0.39
+        extraStoryPrice: 0.39,
+        packageColor: "#854C1D",
+        discountPercentage: 0,
     },
     "The Great Gatsby": {
+        id: "The Great Gatsby",
+        name: "The Great Gatsby",
+        revenueCat: {
+            identifier: "The Great Gatsby",
+            identifierMonthly: "Monthly",
+            identifierOTP: "OTP",
+        },
         price: 8.99,
         freeUsageSecondsAmount: 120 * 60,
         maxWordCount: 2000,
@@ -64,9 +98,18 @@ export const Subscription: Subscription = {
         gptModel: "gpt-3.5-turbo",
         extraStoryPrice: 0.69,
         userHistory: true,
-        voicType: "Advanced"
+        voicType: "Advanced",
+        packageColor: "#2B593F",
+        discountPercentage: 0,
     },
     "The Prime Shakespeare": {
+        id: "The Prime Shakespeare",
+        name: "The Prime Shakespeare",
+        revenueCat: {
+            identifier: "The Prime Shakespeare",
+            identifierMonthly: "Monthly",
+            identifierOTP: "OTP",
+        },
         price: 19.99,
         freeUsageSecondsAmount: 315 * 60,
         maxWordCount: 3500,
@@ -76,12 +119,21 @@ export const Subscription: Subscription = {
         customEnvironmentLimit: 12,
         dialogues: true,
         extraStoryPrice: 0.99,
-        gptModel: "gpt-4",
+        gptModel: "gpt-3.5-turbo",
         userHistory: true,
         voicType: "Advanced",
         continuationOfStory: false,
+        packageColor: "#492F64",
+        discountPercentage: 0,
     },
     "The Greatest of All Time": {
+        id: "The Greatest of All Time",
+        name: "The Greatest of All Time",
+        revenueCat: {
+            identifier: "The Greatest of All Time",
+            identifierMonthly: "Monthly",
+            identifierOTP: "OTP",
+        },
         price: 149.99,
         freeUsageSecondsAmount: 1440 * 60,
         maxWordCount: 6000,
@@ -95,5 +147,7 @@ export const Subscription: Subscription = {
         extraStoryPrice: 2.99,
         coverImage: true,
         continuationOfStory: true,
-    }
+        packageColor: "#69314C",
+        discountPercentage: 0,
+    },
 }

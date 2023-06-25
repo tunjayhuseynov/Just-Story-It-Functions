@@ -1,7 +1,9 @@
 import { Languages } from './languages';
 export type Character = {
+    id: string
     name: string;
     description: string
+    image: string | null
 }
 
 export type ReferanceStory = {
@@ -10,8 +12,10 @@ export type ReferanceStory = {
 }
 
 export type Environment = {
+    id: string
     name: string;
     description: string
+    image: string | null
 }
 
 export type CustomStoryDescriptor = string

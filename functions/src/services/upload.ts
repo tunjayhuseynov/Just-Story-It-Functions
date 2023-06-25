@@ -1,40 +1,52 @@
 import { adminApp } from "../admin"
-import { Readable } from 'stream'
-import { getAudioDurationInSeconds } from 'get-audio-duration'
+import { info } from 'firebase-functions/logger';
+import { getMP3Duration } from "./convert";
+
+const publicURL = (path: string) => {
+    return `https://firebasestorage.googleapis.com/v0/b/just-story-it.appspot.com/o/${encodeURIComponent(path)}?alt=media`
+}
 
 export const UploadBufferAsAudio = async (buffer: Buffer, userId: string, storyId: string) => {
-    let storage = adminApp.storage().bucket()
+    const storage = adminApp.storage().bucket()
 
-    const file = storage.file(`${userId}/${storyId}/storyAudio.mp3`);
-    await file.save(buffer, { contentType: "audio/mpeg" })
+    info("Buffer:")
+    info(buffer.byteLength);
 
-    let stream = Readable.from(buffer)
-    const duration = await getAudioDurationInSeconds(stream)
+    const path = `${userId}/${storyId}/storyAudio.mp3`;
+    const file = storage.file(path);
+    const duration = await getMP3Duration(buffer)
 
+    await file.save(buffer, {
+        contentType: "audio/mpeg", metadata: {
+            duration
+        }
+    })
 
     return {
-        url: file.publicUrl(),
+        url: publicURL(path),
         durationInSeconds: duration
     };
 }
 
 export const UploadBase64AsImage = async (base64: string, userId: string, storyId: string) => {
-    let storage = adminApp.storage().bucket()
+    const storage = adminApp.storage().bucket()
 
-    const file = storage.file(`${userId}/${storyId}/coverImage.png`);
+    const path = `${userId}/${storyId}/coverImage.png`;
+    const file = storage.file(path);
     await file.save(base64, { contentType: "image/jpeg" })
 
 
 
-    return file.publicUrl();
+    return publicURL(path);
 }
 
 
 export const UploadTextAsFile = async (text: string, userId: string, storyId: string) => {
-    let storage = adminApp.storage().bucket()
+    const storage = adminApp.storage().bucket()
 
-    const file = storage.file(`${userId}/${storyId}/text.txt`);
+    const path = `${userId}/${storyId}/text.txt`;
+    const file = storage.file(path);
     await file.save(text, { contentType: "text/plain" })
 
-    return file.publicUrl();
+    return publicURL(path);
 }

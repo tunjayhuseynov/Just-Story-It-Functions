@@ -1,6 +1,7 @@
 import { adminApp } from "../admin";
+import { Collections } from "../types/collections";
 import { IStory } from "../types/story";
-import { IUser, IUserHistory } from "../types/user";
+import { IUser, IUserStoryHistory } from "../types/user";
 import { AdminCrud } from "./crud";
 
 export async function getUserFromAuth(uid: string) {
@@ -12,57 +13,40 @@ export async function getUserFromAuth(uid: string) {
 }
 
 export async function getUserFromDB(uid: string) {
-    let users = await new AdminCrud<IUser>("Users").GetOne(uid)
+    const users = await new AdminCrud<IUser>(Collections.Users).GetOne(uid)
 
     if (!users) return undefined
 
     return users as IUser
 }
 
-export async function AddStoryToUser(uid: string, story: IStory, predictedWordCount: number) {
-    let historyCrud = new AdminCrud<IUserHistory>("UserHistories")
+export async function AddStoryToUser(user: IUser, story: IStory) {
+    const historyCrud = new AdminCrud<IUserStoryHistory>(Collections.UserStoryHistories)
 
-    let data: IUserHistory = {
+    const data: IUserStoryHistory = {
         id: story.id,
         story: story,
-        userId: uid,
+        userId: user.id,
         createdAt: new Date().getTime()
     }
 
     await historyCrud.Create(data, story.id)
-    return await UpdateRemainingQuote(uid, story, predictedWordCount)
+    return await UpdateRemainingQuote(user, story)
 }
 
-async function UpdateRemainingQuote(uid: string, story: IStory, predictedWordCount: number) {
-    let user = await getUserFromDB(uid);
+async function UpdateRemainingQuote(user: IUser, story: IStory) {
+    const crud = new AdminCrud<IUser>(Collections.Users)
 
-    if (!user) throw new Error("User not found")
-
-    let crud = new AdminCrud<IUser>("Users")
-
-    let duration = user.remaningQuoteInSeconds - (Math.min(CalculateNewQuote(predictedWordCount), story.durationInSeconds))
+    const duration = user.remaningQuoteInSeconds - story.durationInSeconds
 
     await crud.Update({
-        id: uid,
-        remaningQuoteInSeconds: duration
+        id: user.id,
+        remaningQuoteInSeconds: Math.max(0, duration)
     })
 
     return duration
 }
 
-export function CalculateNewQuote(wordCount: number) {
-    let x = 0.384;
-    let len = wordCount;
-    return len * x;
-}
-
-export async function isQuoteSufficient(uid: string, wordCount: number) {
-    let userQuote = await getUserFromDB(uid)
-    if (!userQuote) throw new Error("No User Found")
-
-    let seconds = CalculateNewQuote(wordCount)
-
-    if (userQuote.remaningQuoteInSeconds - seconds < 0) return false
-
-    return true
+export async function isQuoteSufficient(user: IUser, avarageDuration: number) {
+    return user.remaningQuoteInSeconds - avarageDuration < -1
 }
