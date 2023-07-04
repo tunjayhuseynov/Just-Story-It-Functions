@@ -8,9 +8,12 @@ export interface IUser {
     username: string,
     name: string | null
     subscription: string,
+    isSubscriptionCanceled: boolean,
+    productChange: string | null,
     customCharacters: { [id: string]: Character },
     customEnvironments: { [id: string]: Environment },
     remaningQuoteInSeconds: number,
+    totalUsedInSeconds: number,
     createdAt: number
 }
 

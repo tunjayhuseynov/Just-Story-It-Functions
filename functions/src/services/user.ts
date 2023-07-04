@@ -1,3 +1,4 @@
+import { FieldValue } from "firebase-admin/firestore";
 import { adminApp } from "../admin";
 import { Collections } from "../types/collections";
 import { IStory } from "../types/story";
@@ -41,7 +42,8 @@ async function UpdateRemainingQuote(user: IUser, story: IStory) {
 
     await crud.Update({
         id: user.id,
-        remaningQuoteInSeconds: Math.max(0, duration)
+        remaningQuoteInSeconds: Math.max(0, duration),
+        totalUsedInSeconds: FieldValue.increment(story.durationInSeconds) as unknown as number
     })
 
     return duration
