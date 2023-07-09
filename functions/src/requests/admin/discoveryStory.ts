@@ -5,6 +5,7 @@ import { GenerateBufferFromText } from "../../modules/google";
 import { UploadBufferAsAudio, UploadTextAsFile } from "../../services/upload";
 import { v1 } from 'uuid'
 import { AdminFunctions } from "../../services/admin";
+import { MoveFile } from "../../services/storage";
 
 export const GenerateDiscoveryStory = https.onCall<IIncomingDiscoveryStory>({ maxInstances: 10 }, async (event) => {
     const isAdmin = event.auth?.token["admin"];
@@ -19,11 +20,13 @@ export const GenerateDiscoveryStory = https.onCall<IIncomingDiscoveryStory>({ ma
     const storyFileLink = await UploadTextAsFile(data.storyText, "discoveryStories", storyId)
     const { url: audioFileLink, durationInSeconds } = await UploadBufferAsAudio(buffer, "discoveryStories", storyId)
 
+    const imageLink = await MoveFile(data.imagePath, `discoveryStories/${storyId}/coverImage.png`)
+
     const story = {
         id: storyId,
         created_at: new Date().getTime(),
         audioLink: audioFileLink,
-        coverImage: data.imageLink,
+        coverImage: imageLink,
         images: [],
         genres: data.genres,
         language: data.language,

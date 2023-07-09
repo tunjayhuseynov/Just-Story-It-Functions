@@ -6,7 +6,7 @@ import { VoiceType } from "./subscription";
 export interface IIncomingDiscoveryStory {
     title: string,
     genres: string[],
-    imageLink: string,
+    imagePath: string,
     language: Languages,
     storyText: string,
     voiceType: VoiceType,

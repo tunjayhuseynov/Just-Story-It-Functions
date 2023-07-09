@@ -1,10 +1,7 @@
 import { adminApp } from "../admin"
 import { info } from 'firebase-functions/logger';
-import { getMP3Duration } from "./convert";
-
-const publicURL = (path: string) => {
-    return `https://firebasestorage.googleapis.com/v0/b/just-story-it.appspot.com/o/${encodeURIComponent(path)}?alt=media`
-}
+import { getMP3Duration } from "./media";
+import { publicURL } from "../utils/const";
 
 export const UploadBufferAsAudio = async (buffer: Buffer, userId: string, storyId: string) => {
     const storage = adminApp.storage().bucket()
