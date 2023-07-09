@@ -2,7 +2,7 @@ export type Languages = "en-US" | "es-ES" | "fr-FR" | "de-DE" | "it-IT" | "da-DK
 
 export type LanguageLevel = "Beginner" | "Intermadiate" | "Advanced"
 
-export type VoiceModels = "Standard" | "Neural2"
+export type VoiceModels = "Standard" | "Neural2" | "WaveNet"
 
 export type GenderType = "MALE" | "FEMALE"
 

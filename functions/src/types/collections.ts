@@ -1,6 +1,7 @@
 
 
-export type CollectionNames = "FunctionErrors" | "Characters" | "SubscriptionPackages" | "Environments" | "UserStoryHistories" | "UserSubscriptionHistory" | "Stories" | "Users" | "General"
+export type CollectionNames = "FunctionErrors" | "Characters" | "SubscriptionPackages" | "Environments" | "UserStoryHistories" | "UserSubscriptionHistory" | "Stories" | "Users" | "General" | AdminCollections
+export type AdminCollections = "DiscoveryStories"
 
 export const Collections: { [name in CollectionNames]: CollectionNames } = {
     Characters: "Characters",
@@ -11,5 +12,6 @@ export const Collections: { [name in CollectionNames]: CollectionNames } = {
     Users: "Users",
     SubscriptionPackages: "SubscriptionPackages",
     General: "General",
-    FunctionErrors: "FunctionErrors"
+    FunctionErrors: "FunctionErrors",
+    DiscoveryStories: "DiscoveryStories"
 }

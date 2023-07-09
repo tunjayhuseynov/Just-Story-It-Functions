@@ -1,3 +1,4 @@
+import { GenerateDiscoveryStory } from './requests/admin/discoveryStory';
 import * as Story from "./requests/story";
 import * as Sign from "./requests/sign";
 import * as RC from "./requests/revenueCat";
@@ -21,6 +22,14 @@ export const revenue = {
     cat: {
         subscription: {
             event: RC.subscriptionEvent
+        }
+    }
+}
+
+export const admin = {
+    generate: {
+        discovery: {
+            story: GenerateDiscoveryStory
         }
     }
 }

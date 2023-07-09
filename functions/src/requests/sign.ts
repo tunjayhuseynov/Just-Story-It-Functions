@@ -1,4 +1,5 @@
 import { Collections } from '../types/collections';
+import { beforeUserCreated } from "firebase-functions/v2/identity";
 import { auth } from "firebase-functions";
 import { IUser } from "../types/user";
 import { adminApp } from "../admin";
@@ -6,11 +7,13 @@ import { HttpsError } from 'firebase-functions/v2/https';
 import { error } from 'firebase-functions/logger';
 import { Subscription } from '../types/subscription';
 
-export const SignNewUser = auth.user().onCreate(async (userEvent) => {
+export const SignNewUser = beforeUserCreated({ maxInstances: 10 }, async (userEvent) => {
+    if (!userEvent.auth) throw new HttpsError("unauthenticated", "No User Id");
+    if (!userEvent.data) throw new HttpsError("unauthenticated", "No User Data");
     try {
         const user: IUser = {
-            id: userEvent.uid,
-            username: userEvent.email ?? userEvent.uid,
+            id: userEvent.auth.uid,
+            username: userEvent.data.email ?? userEvent.auth.uid,
             name: null,
             subscription: Subscription["Free"].revenueCat.identifier,
             customCharacters: {},
@@ -22,7 +25,7 @@ export const SignNewUser = auth.user().onCreate(async (userEvent) => {
             productChange: null
         }
 
-        await adminApp.firestore().collection(Collections.Users).doc(userEvent.uid).create(user);
+        await adminApp.firestore().collection(Collections.Users).doc(userEvent.auth.uid).create(user);
     }
     catch (err) {
         const msg = (err as Error).message;

@@ -1,6 +1,6 @@
 import { GptType } from "./gpt"
 
-type VoicType = "Basic" | "Advanced"
+export type VoiceType = "Basic" | "Advanced"
 
 type SubscriptionType = {
     [name: string]: {
@@ -17,7 +17,7 @@ type SubscriptionType = {
         customCharacterLimit: number,
         customEnvironmentLimit: number,
         customStoryInput: boolean,
-        voicType: VoicType,
+        voicType: VoiceType,
         continuationOfStory: boolean,
         gptModel: GptType,
         extraStoryPrice: number,

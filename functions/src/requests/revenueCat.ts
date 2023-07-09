@@ -44,7 +44,7 @@ export const subscriptionEvent = onDocumentWritten({ document: "events/{docId}",
                     const minutes = parseInt(event.product_id.split("_")[0]);
 
                     adminApp.firestore().collection(Collections.Users).doc(event.app_user_id).update({
-                        remaningQuoteInSeconds: FieldValue.increment(minutes),
+                        remaningQuoteInSeconds: FieldValue.increment(minutes * 60),
                     });
                 }
             }
