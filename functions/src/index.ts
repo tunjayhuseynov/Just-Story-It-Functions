@@ -1,4 +1,4 @@
-import { GenerateDiscoveryStory } from './requests/admin/discoveryStory';
+import { DeleteDiscoveryStory, GenerateDiscoveryStory } from './requests/admin/discoveryStory';
 import * as Story from "./requests/story";
 import * as Sign from "./requests/sign";
 import * as RC from "./requests/revenueCat";
@@ -30,6 +30,11 @@ export const admin = {
     generate: {
         discovery: {
             story: GenerateDiscoveryStory
+        }
+    },
+    delete: {
+        discovery: {
+            story: DeleteDiscoveryStory
         }
     }
 }

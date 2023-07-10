@@ -9,7 +9,8 @@ export async function GenerateImageFromText(text: string) {
 
     const res = await openai.createImage({
         prompt: text,
-        response_format: "b64_json"
+        response_format: "b64_json",
+        size: "512x512"
     });
 
     const base64 = res.data.data[0].b64_json;

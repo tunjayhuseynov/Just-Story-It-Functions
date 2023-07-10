@@ -30,7 +30,7 @@ export const UploadBase64AsImage = async (base64: string, userId: string, storyI
 
     const path = `${userId}/${storyId}/coverImage.png`;
     const file = storage.file(path);
-    await file.save(base64, { contentType: "image/jpeg" })
+    await file.save(Buffer.from(base64, "base64"), { contentType: "image/jpeg" })
 
 
 

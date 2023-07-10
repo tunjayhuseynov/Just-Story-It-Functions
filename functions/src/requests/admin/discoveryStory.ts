@@ -40,6 +40,16 @@ export const GenerateDiscoveryStory = https.onCall<IIncomingDiscoveryStory>({ ma
 
     await new AdminFunctions().uploadDiscoveryStory(storyId, story)
 
+    return { status: 201, statusText: "Successfully" }
+
+})
+
+export const DeleteDiscoveryStory = https.onCall<{ storyId: string }>({ maxInstances: 10 }, async (event) => {
+    const isAdmin = event.auth?.token["admin"];
+    if (!isAdmin) return new HttpsError("unauthenticated", "You are not an admin");
+
+    await new AdminFunctions().deleteDiscoveryStory(event.data.storyId)
+
     return { status: 200, statusText: "Successfully" }
 
 })

@@ -1,6 +1,5 @@
 import { ChatCompletionRequestMessage, ChatCompletionResponseMessage, Configuration, OpenAIApi } from "openai";
 import { IGenerateStoryFromText, openaiApiKey } from ".";
-import { info } from "firebase-functions/logger";
 
 export async function RequestChatGPT(messages: ChatCompletionRequestMessage[], aiModel: IGenerateStoryFromText["aiModel"], attemptCount: number): Promise<ChatCompletionResponseMessage | undefined> {
     const configuration = new Configuration({
@@ -25,9 +24,6 @@ export async function RequestChatGPT(messages: ChatCompletionRequestMessage[], a
         await new Promise((resolve) => setTimeout(resolve, 10000))
         message = await RequestChatGPT(messages, aiModel, attemptCount + 1)
     }
-
-    info("genereate message:")
-    info(message)
 
     return message
 }
