@@ -6,6 +6,9 @@ import { UploadBufferAsAudio, UploadTextAsFile } from "../../services/upload";
 import { v1 } from 'uuid'
 import { AdminFunctions } from "../../services/admin";
 import { MoveFile } from "../../services/storage";
+import { IStory } from "../../types/story";
+import { VoiceType } from "../../types/subscription";
+import { GenderType } from "../../types/languages";
 
 export const GenerateDiscoveryStory = https.onCall<IIncomingDiscoveryStory>({ maxInstances: 10 }, async (event) => {
     const isAdmin = event.auth?.token["admin"];
@@ -22,7 +25,7 @@ export const GenerateDiscoveryStory = https.onCall<IIncomingDiscoveryStory>({ ma
 
     const imageLink = await MoveFile(data.imagePath, `discoveryStories/${storyId}/coverImage.png`)
 
-    const story = {
+    const story: IStory & { voiceType: VoiceType, genderType: GenderType } = {
         id: storyId,
         created_at: new Date().getTime(),
         audioLink: audioFileLink,
@@ -35,7 +38,9 @@ export const GenerateDiscoveryStory = https.onCall<IIncomingDiscoveryStory>({ ma
         customStoryDescriptor: "",
         environments: [],
         characters: [],
-        durationInSeconds
+        durationInSeconds,
+        genderType: data.genderType,
+        voiceType: data.voiceType
     }
 
     await new AdminFunctions().uploadDiscoveryStory(storyId, story)
