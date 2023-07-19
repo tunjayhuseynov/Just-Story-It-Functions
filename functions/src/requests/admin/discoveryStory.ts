@@ -40,7 +40,8 @@ export const GenerateDiscoveryStory = https.onCall<IIncomingDiscoveryStory>({ ma
         characters: [],
         durationInSeconds,
         genderType: data.genderType,
-        voiceType: data.voiceType
+        voiceType: data.voiceType,
+        playlist: []
     }
 
     await new AdminFunctions().uploadDiscoveryStory(storyId, story)

@@ -1,10 +1,12 @@
 import { GptType } from "./gpt"
 
 export type VoiceType = "Basic" | "Advanced"
+type SubscriptionType = "Monthly" | "Annually" | "Enterprise"
 
-type SubscriptionType = {
+type ISubscription = {
     [name: string]: {
         id: string,
+        type: SubscriptionType
         name: string,
         price: number | null,
         discountPercentage: number,
@@ -30,10 +32,11 @@ type SubscriptionType = {
     }
 }
 
-export const Subscription: SubscriptionType = {
+export const Subscription: ISubscription = {
     "Free": {
         id: "Free",
         name: "Free",
+        type: "Monthly",
         revenueCat: {
             identifier: "Free",
             identifierMonthly: "Free",
@@ -47,8 +50,8 @@ export const Subscription: SubscriptionType = {
         coverImage: false,
         customStoryInput: false,
         userHistory: false,
-        customCharacterLimit: 1,
-        customEnvironmentLimit: 1,
+        customCharacterLimit: 3,
+        customEnvironmentLimit: 3,
         voicType: "Basic",
         continuationOfStory: false,
         gptModel: "gpt-3.5-turbo-16k",
@@ -59,6 +62,7 @@ export const Subscription: SubscriptionType = {
     "The Little Prince": {
         id: "The Little Prince",
         name: "The Little Prince",
+        type: "Monthly",
         revenueCat: {
             identifier: "The Little Prince",
             identifierMonthly: "the_little_prince:monthly",
@@ -84,6 +88,7 @@ export const Subscription: SubscriptionType = {
     "The Great Gatsby": {
         id: "The Great Gatsby",
         name: "The Great Gatsby",
+        type: "Monthly",
         revenueCat: {
             identifier: "The Great Gatsby",
             identifierMonthly: "the_great_gatsby:monthly",
@@ -109,6 +114,7 @@ export const Subscription: SubscriptionType = {
     "The Prime Shakespeare": {
         id: "The Prime Shakespeare",
         name: "The Prime Shakespeare",
+        type: "Monthly",
         revenueCat: {
             identifier: "The Prime Shakespeare",
             identifierMonthly: "the_prime_shakespeare:monthly",
@@ -134,6 +140,7 @@ export const Subscription: SubscriptionType = {
     "The Greatest of All Time": {
         id: "The Greatest of All Time",
         name: "The Greatest of All Time",
+        type: "Monthly",
         revenueCat: {
             identifier: "The Greatest of All Time",
             identifierMonthly: "the_greatest_of_all_time:monthly",
@@ -159,6 +166,7 @@ export const Subscription: SubscriptionType = {
     "Enterprise": {
         id: "Enterprise",
         name: "Enterprise",
+        type: "Enterprise",
         revenueCat: {
             identifier: "Enterprise",
             identifierMonthly: "enterprise:monthly",

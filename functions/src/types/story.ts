@@ -15,4 +15,5 @@ export interface IStory {
     title: string;
     durationInSeconds: number;
     language: Languages;
+    playlist: string[]
 }

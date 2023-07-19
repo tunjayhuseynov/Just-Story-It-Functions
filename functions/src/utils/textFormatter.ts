@@ -1,6 +1,6 @@
 
 
-export const SentenceSplitter = (text: string, limit: number) => {
+export const ParagraphSplitter = (text: string, limit: number) => {
     const CHARACTER_LIMIT = limit
     const textArray: string[] = []
     const sentences = text.split(".")
@@ -27,4 +27,14 @@ export const SentenceSplitter = (text: string, limit: number) => {
     }
 
     return textArray;
+}
+
+export function Breaker(text: string) {
+    const split = text.split("\n")
+    return split.map(function(text) {
+        if (text.length < 1) {
+            return `<break time="1.5s"/>`
+        }
+        return text;
+    }).join("\n")
 }

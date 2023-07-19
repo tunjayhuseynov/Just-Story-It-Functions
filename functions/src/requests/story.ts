@@ -75,7 +75,8 @@ export const GetStory = onCall<IRequest, Promise<IResponse>>({ maxInstances: 10,
                 customStoryDescriptor: request.data.customStoryDescriptor,
                 environments: request.data.environments,
                 characters: request.data.characters,
-                durationInSeconds
+                durationInSeconds,
+                playlist: [] 
             }
         }
 

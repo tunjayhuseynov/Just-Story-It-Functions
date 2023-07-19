@@ -10,5 +10,6 @@ export interface IIncomingDiscoveryStory {
     language: Languages,
     storyText: string,
     voiceType: VoiceType,
-    genderType: GenderType
+    genderType: GenderType,
+    locked: boolean
 }

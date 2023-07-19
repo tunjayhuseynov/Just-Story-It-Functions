@@ -1,7 +1,7 @@
 import { info } from "firebase-functions/logger";
 import { GenderType, Languages, VoiceModels } from "../../types/languages";
 import { TextToSpeech } from "./tts";
-import { SentenceSplitter } from "../../utils/sentenceSplitter";
+import { Breaker, ParagraphSplitter } from "../../utils/textFormatter";
 // import * as path from 'path';
 interface IProps {
     text: string,
@@ -14,7 +14,7 @@ interface IProps {
 export async function GenerateBufferFromText({ text, genderType, languageCode, model }: IProps) {
     const CHARACTER_LIMIT = 4999
 
-    const textArray: string[] = SentenceSplitter(text, CHARACTER_LIMIT)
+    const textArray: string[] = ParagraphSplitter(text, CHARACTER_LIMIT).map((text) => Breaker(text))
 
     info("Text On TTS Generate Function:")
     info(text)
