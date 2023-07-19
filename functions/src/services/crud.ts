@@ -3,21 +3,23 @@ import { CollectionNames } from "../types/collections";
 import ICrud from "../types/crud";
 
 export class AdminCrud<T> implements ICrud<T> {
-    collection: CollectionNames;
 
-    constructor(collection: CollectionNames) {
-        this.collection = collection;
-    }
+    constructor(public collection: CollectionNames, public sub?: { doc: string, collection: CollectionNames }) { }
 
     async GetOne(id: string): Promise<T | undefined> {
-        const itemDoc = await adminApp
+        let itemDoc = adminApp
             .firestore()
-            .collection(this.collection)
-            .doc(id)
-            .get();
-        if (!itemDoc.exists) return undefined;
+            .collection(this.collection);
 
-        return itemDoc.data() as T;
+        if (this.sub) {
+            itemDoc = itemDoc.doc(this.sub.doc).collection(this.sub.collection);
+        }
+
+        const doc = await itemDoc.doc(id).get();
+
+        if (!doc.exists) return undefined;
+
+        return doc.data() as T;
     }
 
     async GetAll({
@@ -27,16 +29,26 @@ export class AdminCrud<T> implements ICrud<T> {
         T[]
     > {
         if (!order && !L) {
-            const itemDocs = await adminApp
+            let itemDocs = adminApp
                 .firestore()
-                .collection(this.collection)
-                .get();
-            return itemDocs.docs.map((doc) => ({ id: doc.id, ...(doc.data() as T) }));
+                .collection(this.collection);
+
+            if (this.sub) {
+                itemDocs = itemDocs.doc(this.sub.doc).collection(this.sub.collection);
+            }
+
+            const docsReq = await itemDocs.get()
+
+            return docsReq.docs.map((doc) => ({ id: doc.id, ...(doc.data() as T) }));
         }
         let connection:
             | FirebaseFirestore.Query<FirebaseFirestore.DocumentData>
             | FirebaseFirestore.CollectionReference<FirebaseFirestore.DocumentData> =
             adminApp.firestore().collection(this.collection);
+
+        if (this.sub) {
+            connection = (connection as FirebaseFirestore.CollectionReference<FirebaseFirestore.DocumentData>).doc(this.sub.doc).collection(this.sub.collection);
+        }
 
         if (order) {
             connection = connection.orderBy(order.name, order.desc ? "desc" : "asc");
@@ -51,25 +63,36 @@ export class AdminCrud<T> implements ICrud<T> {
     }
 
     async Create(data: T, id?: string): Promise<T> {
-        const collection = adminApp
+        let collection = adminApp
             .firestore()
             .collection(this.collection)
+
+        if (this.sub) {
+            collection = collection.doc(this.sub.doc).collection(this.sub.collection);
+        }
+
         if (id) {
             await collection
                 .doc(id)
-                .create(data as any)
+                .create(data as never)
         } else {
             await collection
-                .add(data as any);
+                .add(data as never);
         }
 
         return data;
     }
 
     async Update(data: Partial<T> & { id: string }): Promise<Partial<T>> {
-        await adminApp
+        let col = adminApp
             .firestore()
-            .collection(this.collection)
+            .collection(this.collection);
+
+        if (this.sub) {
+            col = col.doc(this.sub.doc).collection(this.sub.collection);
+        }
+
+        await col
             .doc(data.id)
             .update(data);
 
@@ -77,7 +100,13 @@ export class AdminCrud<T> implements ICrud<T> {
     }
 
     async Delete(id: string): Promise<boolean> {
-        await adminApp.firestore().collection(this.collection).doc(id).delete();
+        let col = adminApp.firestore().collection(this.collection);
+
+        if (this.sub) {
+            col = col.doc(this.sub.doc).collection(this.sub.collection);
+        }
+        
+        await col.doc(id).delete();
 
         return true;
     }

@@ -25,7 +25,7 @@ export const GenerateDiscoveryStory = https.onCall<IIncomingDiscoveryStory>({ ma
 
     const imageLink = await MoveFile(data.imagePath, `discoveryStories/${storyId}/coverImage.png`)
 
-    const story: IStory & { voiceType: VoiceType, genderType: GenderType } = {
+    const story: IStory & { voiceType: VoiceType, genderType: GenderType, locked: boolean } = {
         id: storyId,
         created_at: new Date().getTime(),
         audioLink: audioFileLink,
@@ -41,7 +41,8 @@ export const GenerateDiscoveryStory = https.onCall<IIncomingDiscoveryStory>({ ma
         durationInSeconds,
         genderType: data.genderType,
         voiceType: data.voiceType,
-        playlist: []
+        playlist: [],
+        locked: data.locked
     }
 
     await new AdminFunctions().uploadDiscoveryStory(storyId, story)

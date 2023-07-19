@@ -22,7 +22,7 @@ export async function getUserFromDB(uid: string) {
 }
 
 export async function AddStoryToUser(user: IUser, story: IStory) {
-    const historyCrud = new AdminCrud<IUserStoryHistory>(Collections.UserStoryHistories)
+    const historyCrud = new AdminCrud<IUserStoryHistory>(Collections.Users, { doc: user.id, collection: Collections.StoryHistories })
 
     const data: IUserStoryHistory = {
         id: story.id,
