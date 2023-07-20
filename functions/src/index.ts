@@ -2,7 +2,7 @@ import { DeleteDiscoveryStory, GenerateDiscoveryStory } from './requests/admin/d
 import * as Story from "./requests/story";
 import * as Sign from "./requests/sign";
 import * as RC from "./requests/revenueCat";
-import { updateTriggerPlaylistToStory } from './requests/playlist';
+import { deleteTriggerPlaylist, updateTriggerPlaylistToStory, updateTriggerStoryToPlaylist } from './requests/playlist';
 // import * as Migration from "./requests/migration";
 
 
@@ -13,8 +13,10 @@ export const get = {
 export const playlist = {
     trigger: {
         update: {
-            story: updateTriggerPlaylistToStory
-        }
+            story: updateTriggerPlaylistToStory,
+            storyInPlaylist: updateTriggerStoryToPlaylist
+        },
+        delete: deleteTriggerPlaylist
     }
 }
 

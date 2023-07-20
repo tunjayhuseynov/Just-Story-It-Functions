@@ -6,6 +6,14 @@ export class AdminCrud<T> implements ICrud<T> {
 
     constructor(public collection: CollectionNames, public sub?: { doc: string, collection: CollectionNames }) { }
 
+    get GetDocumentReference() {
+        let collection = adminApp.firestore().collection(this.collection);
+        if (this.sub) {
+            collection = collection.doc(this.sub.doc).collection(this.sub.collection);
+        }
+        return collection;
+    }
+
     async GetOne(id: string): Promise<T | undefined> {
         let itemDoc = adminApp
             .firestore()
@@ -105,7 +113,7 @@ export class AdminCrud<T> implements ICrud<T> {
         if (this.sub) {
             col = col.doc(this.sub.doc).collection(this.sub.collection);
         }
-        
+
         await col.doc(id).delete();
 
         return true;
