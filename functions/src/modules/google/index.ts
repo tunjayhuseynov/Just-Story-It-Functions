@@ -14,7 +14,7 @@ interface IProps {
 export async function GenerateBufferFromText({ text, genderType, languageCode, model }: IProps) {
     const CHARACTER_LIMIT = 4999
 
-    const textArray: string[] = ParagraphSplitter(text, CHARACTER_LIMIT).map((text) => Breaker(text))
+    const textArray: string[] = ParagraphSplitter(Breaker(text), CHARACTER_LIMIT)
 
     info("Text On TTS Generate Function:")
     info(text)
