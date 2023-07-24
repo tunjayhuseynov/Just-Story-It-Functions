@@ -54,13 +54,13 @@ export async function GenerateStory({ dialogues, charaters, environments, storyI
 
     if (subscription.coverImage && coverImagePrompt) {
         const imageBase64 = await GenerateImageFromText(coverImagePrompt)
-        coverImageLink = await UploadBase64AsImage(imageBase64, user.id, storyId)
+        coverImageLink = await UploadBase64AsImage(imageBase64, `users/${user.id}`, storyId)
     }
 
-    const storyFileLink = await UploadTextAsFile(story, user.id, storyId)
+    const storyFileLink = await UploadTextAsFile(story, `users/${user.id}`, storyId)
 
     const buffer = await GenerateBufferFromText({ text: story, languageCode: language, genderType: voiceGenderType, model: subscription.voicType == "Advanced" ? "Neural2" : "Standard" })
-    const { url: audioFileLink, durationInSeconds } = await UploadBufferAsAudio(buffer, user.id, storyId)
+    const { url: audioFileLink, durationInSeconds } = await UploadBufferAsAudio(buffer, `users/${user.id}`, storyId)
 
 
     return {
