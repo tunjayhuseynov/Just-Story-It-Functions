@@ -31,7 +31,7 @@ export async function TextToSpeech({ text, languageCode, genderType, model }: IP
     const request: google.cloud.texttospeech.v1.ISynthesizeSpeechRequest = {
         input: { ssml: `<speak>${text}</speak>` },
         voice: { name: selectedModel.modelType, languageCode: selectedModel.language },
-        audioConfig: { audioEncoding: 'MP3' },
+        audioConfig: { audioEncoding: 'MP3', pitch: selectedModel.pitch, speakingRate: selectedModel.speed },
     };
 
     const [response] = await client.synthesizeSpeech(request, {

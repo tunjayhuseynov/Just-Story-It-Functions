@@ -16,6 +16,7 @@ type ISubscription = {
         dialogues: boolean,
         coverImage: boolean,
         userHistory: boolean,
+        allDiscoveryStoriesUnlocked: boolean,
         customCharacterLimit: number,
         customEnvironmentLimit: number,
         customStoryInput: boolean,
@@ -44,6 +45,7 @@ export const Subscription: ISubscription = {
         },
         price: null,
         isRecommended: false,
+        allDiscoveryStoriesUnlocked: false,
         freeUsageSecondsAmount: 9 * 60,
         maxSecondsPerStory: 3 * 60,
         dialogues: false,
@@ -62,6 +64,7 @@ export const Subscription: ISubscription = {
         id: "The Little Prince",
         name: "The Little Prince",
         type: "Monthly",
+        allDiscoveryStoriesUnlocked: true,
         revenueCat: {
             identifier: "The Little Prince",
             identifierMonthly: "the_little_prince:monthly",
@@ -88,6 +91,7 @@ export const Subscription: ISubscription = {
         isRecommended: true,
         name: "The Great Gatsby",
         type: "Monthly",
+        allDiscoveryStoriesUnlocked: true,
         revenueCat: {
             identifier: "The Great Gatsby",
             identifierMonthly: "the_great_gatsby:monthly",
@@ -112,6 +116,7 @@ export const Subscription: ISubscription = {
         id: "The Prime Shakespeare",
         name: "The Prime Shakespeare",
         type: "Monthly",
+        allDiscoveryStoriesUnlocked: true,
         revenueCat: {
             identifier: "The Prime Shakespeare",
             identifierMonthly: "the_prime_shakespeare:monthly",
@@ -137,6 +142,7 @@ export const Subscription: ISubscription = {
         id: "The Greatest of All Time",
         name: "The Greatest of All Time",
         type: "Monthly",
+        allDiscoveryStoriesUnlocked: true,
         revenueCat: {
             identifier: "The Greatest of All Time",
             identifierMonthly: "the_greatest_of_all_time:monthly",
@@ -162,6 +168,7 @@ export const Subscription: ISubscription = {
         id: "Enterprise",
         name: "Enterprise",
         type: "Enterprise",
+        allDiscoveryStoriesUnlocked: true,
         revenueCat: {
             identifier: "Enterprise",
             identifierMonthly: "enterprise:monthly",

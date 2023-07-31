@@ -28,10 +28,7 @@ export const ParagraphSplitter = (text: string, limit: number) => {
 
 export function Breaker(text: string) {
     const split = text.split("\n")
-    return split.map(function(text) {
-        if (text.length < 1) {
-            return `<break time="1.33s"/>`
-        }
+    return split.filter(s=>s.length > 0).map(function(text) {
         return text + ` <break time="1.33s"/>`;
     }).join("\n")
 }

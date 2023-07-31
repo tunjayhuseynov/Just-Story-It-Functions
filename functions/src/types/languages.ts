@@ -6,7 +6,7 @@ export type VoiceModels = "Standard" | "Neural2" | "WaveNet"
 
 export type GenderType = "MALE" | "FEMALE"
 
-type LanguageType = { [langauge in Languages]: { language: Languages, model: VoiceModels, modelType: string, gender: GenderType }[] }
+type LanguageType = { [langauge in Languages]: { language: Languages, model: VoiceModels, modelType: string, gender: GenderType, pitch: number, speed: number }[] }
 
 export const LangaugeSecondsToWordsDeltaIndex: { [lan in Languages]: number } = {
     "en-US": 2.795,
@@ -24,25 +24,33 @@ export const LanguageTypes: LanguageType = {
             language: "en-US",
             model: "Neural2",
             modelType: "en-US-Neural2-A",
-            gender: "MALE"
+            gender: "MALE",
+            speed: 1,
+            pitch: 0
         },
         {
             language: "en-US",
             model: "Neural2",
-            modelType: "en-US-Neural2-G",
-            gender: "FEMALE"
+            modelType: "en-US-Neural2-F",
+            gender: "FEMALE",
+            speed: 1,
+            pitch: 0
         },
         {
             language: "en-US",
             model: "Standard",
-            modelType: "en-US-Standard-A",
-            gender: "MALE"
+            modelType: "en-US-Standard-D",
+            gender: "MALE",
+            speed: 1,
+            pitch: 0
         },
         {
             language: "en-US",
             model: "Standard",
             modelType: "en-US-Standard-C",
-            gender: "FEMALE"
+            gender: "FEMALE",
+            speed: 1,
+            pitch: 0
         },
     ],
     "es-ES": [],
