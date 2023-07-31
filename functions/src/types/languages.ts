@@ -23,10 +23,10 @@ export const LanguageTypes: LanguageType = {
         {
             language: "en-US",
             model: "Neural2",
-            modelType: "en-US-Neural2-A",
+            modelType: "en-US-Neural2-D",
             gender: "MALE",
-            speed: 1,
-            pitch: 0
+            speed: 0.96,
+            pitch: -3.6
         },
         {
             language: "en-US",
@@ -41,16 +41,16 @@ export const LanguageTypes: LanguageType = {
             model: "Standard",
             modelType: "en-US-Standard-D",
             gender: "MALE",
-            speed: 1,
-            pitch: 0
+            speed: 0.96,
+            pitch: -3.6
         },
         {
             language: "en-US",
             model: "Standard",
-            modelType: "en-US-Standard-C",
+            modelType: "en-US-Standard-F",
             gender: "FEMALE",
-            speed: 1,
-            pitch: 0
+            speed: 0.96,
+            pitch: -0.4
         },
     ],
     "es-ES": [],
