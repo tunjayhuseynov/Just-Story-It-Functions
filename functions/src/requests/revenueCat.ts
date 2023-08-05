@@ -24,7 +24,8 @@ export const subscriptionEvent = onDocumentWritten({ document: "events/{docId}",
                     subscription: plan.revenueCat.identifier,
                     remaningQuoteInSeconds: plan.freeUsageSecondsAmount,
                     isSubscriptionCanceled: false,
-                    productChange: null
+                    productChange: null,
+                    hasEverSubscribed: true
                 });
             } else if (event.type == "CANCELLATION") {
                 adminApp.firestore().collection(Collections.Users).doc(event.app_user_id).update({

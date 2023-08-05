@@ -14,7 +14,9 @@ export interface IUser {
     customEnvironments: { [id: string]: Environment },
     remaningQuoteInSeconds: number,
     totalUsedInSeconds: number,
-    createdAt: number
+    offers: { [storeProductId: string]: { storeProductId: string, offerProductId: string } }
+    createdAt: number,
+    hasEverSubscribed: boolean
 }
 
 export interface IUserSubscriptionHistory {

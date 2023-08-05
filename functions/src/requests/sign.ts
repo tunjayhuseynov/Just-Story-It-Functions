@@ -20,7 +20,9 @@ export const SignNewUser = auth.user().onCreate(async (userEvent) => {
             remaningQuoteInSeconds: 0,
             totalUsedInSeconds: 0,
             isSubscriptionCanceled: false,
-            productChange: null
+            offers: {},
+            productChange: null,
+            hasEverSubscribed: false
         }
 
         await adminApp.firestore().collection(Collections.Users).doc(userEvent.uid).create(user);
