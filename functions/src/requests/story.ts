@@ -45,7 +45,7 @@ export const GetStory = onCall<IRequest, Promise<IResponse>>({ maxInstances: 10,
 
         if (await isQuoteSufficient(user, request.data.averageDurationInSeconds)) throw new Error("No enough usage")
 
-        const { audioFileLink, coverImageLink, storyFileLink, storyTitle, durationInSeconds } = await GenerateStory({
+        const { audioFileLink, coverImageLink, storyFileLink, storyTitle, durationInSeconds, voiceModelType } = await GenerateStory({
             storyId,
             user,
             dialogues: request.data.dialogues,
@@ -76,7 +76,11 @@ export const GetStory = onCall<IRequest, Promise<IResponse>>({ maxInstances: 10,
                 environments: request.data.environments,
                 characters: request.data.characters,
                 durationInSeconds,
-                playlist: [] 
+                playlist: [],
+                dialogues: request.data.dialogues,
+                genderType: request.data.voiceGenderType,
+                languageLevel: request.data.languageLevel,
+                voiceModel: voiceModelType
             }
         }
 

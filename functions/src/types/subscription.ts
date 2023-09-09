@@ -27,23 +27,35 @@ type ISubscription = {
         isRecommended: boolean,
         revenueCat: {
             identifier: string,
-            identifierMonthly: string,
-            identifierOTP: string,
+            IOS: {
+                identifierMonthly: string,
+                identifierOTP: string,
+            },
+            Android: {
+                identifierMonthly: string,
+                identifierOTP: string,
+            }
         }
     }
 }
 
 export const Subscription: ISubscription = {
-    "Free": {
-        id: "Free",
-        name: "Free",
+    "Starter": {
+        id: "Starter",
+        name: "Starter",
         type: "Monthly",
         revenueCat: {
-            identifier: "Free",
-            identifierMonthly: "Free",
-            identifierOTP: "Free"
+            identifier: "Starter",
+            Android: {
+                identifierMonthly: "starter:starter",
+                identifierOTP: "Free"
+            },
+            IOS: {
+                identifierMonthly: "Starter",
+                identifierOTP: "Free"
+            }
         },
-        price: null,
+        price: 0.99,
         isRecommended: false,
         allDiscoveryStoriesUnlocked: false,
         freeUsageSecondsAmount: 9 * 60,
@@ -67,8 +79,14 @@ export const Subscription: ISubscription = {
         allDiscoveryStoriesUnlocked: true,
         revenueCat: {
             identifier: "The Little Prince",
-            identifierMonthly: "the_little_prince:monthly",
-            identifierOTP: "OTP"
+            Android: {
+                identifierMonthly: "the_little_prince:monthly",
+                identifierOTP: "OTP"
+            },
+            IOS: {
+                identifierMonthly: "the_little_prince",
+                identifierOTP: "OTP"
+            }
         },
         price: 2.99,
         isRecommended: false,
@@ -94,8 +112,14 @@ export const Subscription: ISubscription = {
         allDiscoveryStoriesUnlocked: true,
         revenueCat: {
             identifier: "The Great Gatsby",
-            identifierMonthly: "the_great_gatsby:monthly",
-            identifierOTP: "OTP",
+            Android: {
+                identifierMonthly: "the_great_gatsby:monthly",
+                identifierOTP: "OTP",
+            },
+            IOS: {
+                identifierMonthly: "the_great_gatsby",
+                identifierOTP: "OTP",
+            }
         },
         customStoryInput: true,
         price: 7.99,
@@ -119,8 +143,14 @@ export const Subscription: ISubscription = {
         allDiscoveryStoriesUnlocked: true,
         revenueCat: {
             identifier: "The Prime Shakespeare",
-            identifierMonthly: "the_prime_shakespeare:monthly",
-            identifierOTP: "OTP",
+            Android: {
+                identifierMonthly: "the_prime_shakespeare:monthly",
+                identifierOTP: "OTP",
+            },
+            IOS: {
+                identifierMonthly: "the_prime_shakespeare",
+                identifierOTP: "OTP",
+            }
         },
         price: 29.99,
         freeUsageSecondsAmount: 300 * 60,
@@ -145,8 +175,14 @@ export const Subscription: ISubscription = {
         allDiscoveryStoriesUnlocked: true,
         revenueCat: {
             identifier: "The Greatest of All Time",
-            identifierMonthly: "the_greatest_of_all_time:monthly",
-            identifierOTP: "OTP",
+            Android: {
+                identifierMonthly: "the_greatest_of_all_time:monthly",
+                identifierOTP: "OTP",
+            },
+            IOS: {
+                identifierMonthly: "the_greatest_of_all_time",
+                identifierOTP: "OTP",
+            }
         },
         price: 149.99,
         freeUsageSecondsAmount: 1440 * 60,
@@ -171,8 +207,14 @@ export const Subscription: ISubscription = {
         allDiscoveryStoriesUnlocked: true,
         revenueCat: {
             identifier: "Enterprise",
-            identifierMonthly: "enterprise:monthly",
-            identifierOTP: "OTP",
+            Android: {
+                identifierMonthly: "enterprise:monthly",
+                identifierOTP: "OTP",
+            },
+            IOS: {
+                identifierMonthly: "enterprise",
+                identifierOTP: "OTP",
+            }
         },
         price: 499.99,
         freeUsageSecondsAmount: 1440 * 60,

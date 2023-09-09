@@ -17,7 +17,7 @@ export const subscriptionEvent = onDocumentWritten({ document: "events/{docId}",
             const event = data as IPurchaseEvent;
             if (event.type == "RENEWAL" || event.type == "INITIAL_PURCHASE") {
                 const entitlements = event.entitlement_ids;
-                const plan = Subscription[entitlements.length > 0 ? entitlements[0] : "Free"]
+                const plan = Subscription[entitlements[0]]
                 info("Plan")
                 info(plan)
                 adminApp.firestore().collection(Collections.Users).doc(event.app_user_id).update({
@@ -29,13 +29,13 @@ export const subscriptionEvent = onDocumentWritten({ document: "events/{docId}",
                 });
             } else if (event.type == "CANCELLATION") {
                 adminApp.firestore().collection(Collections.Users).doc(event.app_user_id).update({
+                    subscription: null,
                     isSubscriptionCanceled: true,
                     productChange: null
                 });
             } else if (event.type == "EXPIRATION") {
-                const plan = Subscription["Free"]
                 adminApp.firestore().collection(Collections.Users).doc(event.app_user_id).update({
-                    subscription: plan.revenueCat.identifier,
+                    subscription: null,
                     remaningQuoteInSeconds: 0,
                     isSubscriptionCanceled: false,
                     productChange: null

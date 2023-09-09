@@ -3,7 +3,7 @@ import * as Story from "./requests/story";
 import * as Sign from "./requests/sign";
 import * as RC from "./requests/revenueCat";
 import { deleteTriggerPlaylist, updateTriggerPlaylistToStory, updateTriggerStoryToPlaylist } from './requests/playlist';
-// import * as Migration from "./requests/migration";
+import * as Migration from "./requests/migration";
 
 
 export const get = {
@@ -52,4 +52,4 @@ export const admin = {
 
 // MIGRATION IN LOCAL ONLY
 
-// export const SubscriptionPackageMigration = Migration.SubscriptionPackageMigration
+export const SubscriptionPackageMigration = Migration.SubscriptionPackageMigration

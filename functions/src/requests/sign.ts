@@ -4,23 +4,25 @@ import { IUser } from "../types/user";
 import { adminApp } from "../admin";
 import { HttpsError } from 'firebase-functions/v2/https';
 import { error } from 'firebase-functions/logger';
-import { Subscription } from '../types/subscription';
 
 export const SignNewUser = auth.user().onCreate(async (userEvent) => {
- 
+
     try {
         const user: IUser = {
             id: userEvent.uid,
             username: userEvent.email ?? userEvent.uid,
             name: null,
-            subscription: Subscription["Free"].revenueCat.identifier,
+            subscription: "",
             customCharacters: {},
             customEnvironments: {},
             createdAt: new Date().getTime(),
             remaningQuoteInSeconds: 0,
             totalUsedInSeconds: 0,
             isSubscriptionCanceled: false,
-            offers: {},
+            offers: {
+                ios: {},
+                android: {}
+            },
             productChange: null,
             hasEverSubscribed: false
         }

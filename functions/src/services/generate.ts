@@ -1,6 +1,6 @@
 import { Character, Environment, ReferanceStory } from './../types/inputs';
 import { GenerateStoryFromText } from "../modules/openai";
-import { GenderType, LanguageLevel, Languages } from "../types/languages";
+import { GenderType, LanguageLevel, Languages, VoiceModels } from "../types/languages";
 import { Subscription } from "../types/subscription";
 import { IUser } from "../types/user";
 import { UploadBase64AsImage, UploadBufferAsAudio, UploadTextAsFile } from './upload';
@@ -28,7 +28,8 @@ interface IGenerateStoryResponse {
     coverImageLink: string | null,
     storyFileLink: string,
     audioFileLink: string,
-    durationInSeconds: number
+    durationInSeconds: number,
+    voiceModelType: VoiceModels
 }
 
 export async function GenerateStory({ dialogues, charaters, environments, storyId, user, genres, language, languageLevel, wordCount, customStoryDescriptor, referanceStory, voiceGenderType }: IGenerateStoryProps): Promise<IGenerateStoryResponse> {
@@ -68,6 +69,7 @@ export async function GenerateStory({ dialogues, charaters, environments, storyI
         coverImageLink: coverImageLink || null,
         audioFileLink,
         storyFileLink,
+        voiceModelType: subscription.voicType == "Advanced" ? "Neural2" : "Standard",
         durationInSeconds
     }
 }

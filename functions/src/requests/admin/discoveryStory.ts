@@ -42,7 +42,10 @@ export const GenerateDiscoveryStory = https.onCall<IIncomingDiscoveryStory>({ ma
         genderType: data.genderType,
         voiceType: data.voiceType,
         playlist: [],
-        locked: data.locked
+        locked: data.locked,
+        dialogues: true,
+        languageLevel: "Advanced",
+        voiceModel: data.voiceType === "Advanced" ? "Neural2" : "Standard"
     }
 
     await new AdminFunctions().uploadDiscoveryStory(storyId, story)

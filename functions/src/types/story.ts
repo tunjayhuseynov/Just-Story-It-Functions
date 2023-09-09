@@ -1,5 +1,5 @@
 import { Character, Environment } from "./inputs";
-import { Languages } from "./languages";
+import { GenderType, LanguageLevel, Languages, VoiceModels } from "./languages";
 
 export interface IStory {
     id: string,
@@ -16,4 +16,9 @@ export interface IStory {
     durationInSeconds: number;
     language: Languages;
     playlist: string[]
+
+    dialogues: boolean,
+    genderType: GenderType,
+    languageLevel: LanguageLevel,
+    voiceModel: VoiceModels
 }

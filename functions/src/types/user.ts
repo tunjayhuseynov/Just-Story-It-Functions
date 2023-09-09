@@ -14,9 +14,10 @@ export interface IUser {
     customEnvironments: { [id: string]: Environment },
     remaningQuoteInSeconds: number,
     totalUsedInSeconds: number,
-    offers: { [storeProductId: string]: { storeProductId: string, offerProductId: string } }
+    offers: { ios: { [storeProductId: string]: { storeProductId: string, offerProductId: string } }, android: { [storeProductId: string]: { storeProductId: string, offerProductId: string } } }
     createdAt: number,
-    hasEverSubscribed: boolean
+    hasEverSubscribed: boolean;
+    notificationId?: string
 }
 
 export interface IUserSubscriptionHistory {
