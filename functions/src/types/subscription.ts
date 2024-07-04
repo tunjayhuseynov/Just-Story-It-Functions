@@ -1,0 +1,235 @@
+import { GptType } from "./gpt"
+
+export type VoiceType = "Basic" | "Advanced"
+type SubscriptionType = "Monthly" | "Annually" | "Enterprise"
+
+type ISubscription = {
+    [name: string]: {
+        id: string,
+        type: SubscriptionType
+        name: string,
+        price: number | null,
+        discountPercentage: number,
+        // maxWordCount: number, Removed
+        maxSecondsPerStory: number,
+        freeUsageSecondsAmount: number,
+        dialogues: boolean,
+        coverImage: boolean,
+        userHistory: boolean,
+        allDiscoveryStoriesUnlocked: boolean,
+        customCharacterLimit: number,
+        customEnvironmentLimit: number,
+        customStoryInput: boolean,
+        voicType: VoiceType,
+        continuationOfStory: boolean,
+        gptModel: GptType,
+        packageColor: string,
+        isRecommended: boolean,
+        revenueCat: {
+            identifier: string,
+            IOS: {
+                identifierMonthly: string,
+                identifierOTP: string,
+            },
+            Android: {
+                identifierMonthly: string,
+                identifierOTP: string,
+            }
+        }
+    }
+}
+
+export const Subscription: ISubscription = {
+    "Starter": {
+        id: "Starter",
+        name: "Starter",
+        type: "Monthly",
+        revenueCat: {
+            identifier: "Starter",
+            Android: {
+                identifierMonthly: "starter:starter",
+                identifierOTP: "Free"
+            },
+            IOS: {
+                identifierMonthly: "Starter",
+                identifierOTP: "Free"
+            }
+        },
+        price: 0.99,
+        isRecommended: false,
+        allDiscoveryStoriesUnlocked: false,
+        freeUsageSecondsAmount: 9 * 60,
+        maxSecondsPerStory: 3 * 60,
+        dialogues: false,
+        coverImage: false,
+        customStoryInput: false,
+        userHistory: false,
+        customCharacterLimit: 3,
+        customEnvironmentLimit: 3,
+        voicType: "Basic",
+        continuationOfStory: false,
+        gptModel: "gpt-3.5-turbo-16k",
+        packageColor: "#e5e5e5",
+        discountPercentage: 0,
+    },
+    "The Little Prince": {
+        id: "The Little Prince",
+        name: "The Little Prince",
+        type: "Monthly",
+        allDiscoveryStoriesUnlocked: true,
+        revenueCat: {
+            identifier: "The Little Prince",
+            Android: {
+                identifierMonthly: "the_little_prince:monthly",
+                identifierOTP: "OTP"
+            },
+            IOS: {
+                identifierMonthly: "the_little_prince",
+                identifierOTP: "OTP"
+            }
+        },
+        price: 2.99,
+        isRecommended: false,
+        freeUsageSecondsAmount: 30 * 60,
+        maxSecondsPerStory: 6 * 60,
+        continuationOfStory: false,
+        coverImage: false,
+        customStoryInput: false,
+        customCharacterLimit: 3,
+        customEnvironmentLimit: 3,
+        dialogues: false,
+        gptModel: "gpt-3.5-turbo-16k",
+        userHistory: true,
+        voicType: "Basic",
+        packageColor: "#56402a",
+        discountPercentage: 0,
+    },
+    "The Great Gatsby": {
+        id: "The Great Gatsby",
+        isRecommended: true,
+        name: "The Great Gatsby",
+        type: "Monthly",
+        allDiscoveryStoriesUnlocked: true,
+        revenueCat: {
+            identifier: "The Great Gatsby",
+            Android: {
+                identifierMonthly: "the_great_gatsby:monthly",
+                identifierOTP: "OTP",
+            },
+            IOS: {
+                identifierMonthly: "the_great_gatsby",
+                identifierOTP: "OTP",
+            }
+        },
+        customStoryInput: true,
+        price: 7.99,
+        freeUsageSecondsAmount: 90 * 60,
+        maxSecondsPerStory: 12 * 60,
+        continuationOfStory: false,
+        coverImage: true,
+        customCharacterLimit: 6,
+        customEnvironmentLimit: 6,
+        dialogues: true,
+        gptModel: "gpt-3.5-turbo-16k",
+        userHistory: true,
+        voicType: "Advanced",
+        packageColor: "#2B593F",
+        discountPercentage: 0,
+    },
+    "The Prime Shakespeare": {
+        id: "The Prime Shakespeare",
+        name: "The Prime Shakespeare",
+        type: "Monthly",
+        allDiscoveryStoriesUnlocked: true,
+        revenueCat: {
+            identifier: "The Prime Shakespeare",
+            Android: {
+                identifierMonthly: "the_prime_shakespeare:monthly",
+                identifierOTP: "OTP",
+            },
+            IOS: {
+                identifierMonthly: "the_prime_shakespeare",
+                identifierOTP: "OTP",
+            }
+        },
+        price: 29.99,
+        freeUsageSecondsAmount: 300 * 60,
+        maxSecondsPerStory: 21 * 60,
+        coverImage: true,
+        customStoryInput: true,
+        customCharacterLimit: 12,
+        customEnvironmentLimit: 12,
+        dialogues: true,
+        gptModel: "gpt-3.5-turbo-16k",
+        userHistory: true,
+        voicType: "Advanced",
+        continuationOfStory: false,
+        packageColor: "#492a56",
+        discountPercentage: 0,
+        isRecommended: false,
+    },
+    "The Greatest of All Time": {
+        id: "The Greatest of All Time",
+        name: "The Greatest of All Time",
+        type: "Monthly",
+        allDiscoveryStoriesUnlocked: true,
+        revenueCat: {
+            identifier: "The Greatest of All Time",
+            Android: {
+                identifierMonthly: "the_greatest_of_all_time:monthly",
+                identifierOTP: "OTP",
+            },
+            IOS: {
+                identifierMonthly: "the_greatest_of_all_time",
+                identifierOTP: "OTP",
+            }
+        },
+        price: 149.99,
+        freeUsageSecondsAmount: 1440 * 60,
+        maxSecondsPerStory: 30 * 60,
+        gptModel: "gpt-3.5-turbo-16k",
+        customStoryInput: true,
+        userHistory: true,
+        voicType: "Advanced",
+        customCharacterLimit: 30,
+        customEnvironmentLimit: 30,
+        dialogues: true,
+        coverImage: true,
+        continuationOfStory: false,
+        packageColor: "#562a45",
+        discountPercentage: 0,
+        isRecommended: false,
+    },
+    "Enterprise": {
+        id: "Enterprise",
+        name: "Enterprise",
+        type: "Enterprise",
+        allDiscoveryStoriesUnlocked: true,
+        revenueCat: {
+            identifier: "Enterprise",
+            Android: {
+                identifierMonthly: "enterprise:monthly",
+                identifierOTP: "OTP",
+            },
+            IOS: {
+                identifierMonthly: "enterprise",
+                identifierOTP: "OTP",
+            }
+        },
+        price: 499.99,
+        freeUsageSecondsAmount: 1440 * 60,
+        maxSecondsPerStory: 30 * 60,
+        gptModel: "gpt-4-32k",
+        customStoryInput: true,
+        userHistory: true,
+        voicType: "Advanced",
+        customCharacterLimit: 30,
+        customEnvironmentLimit: 30,
+        dialogues: true,
+        coverImage: true,
+        continuationOfStory: true,
+        packageColor: "#2a564e",
+        discountPercentage: 0,
+        isRecommended: false,
+    },
+}
