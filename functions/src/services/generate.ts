@@ -4,7 +4,8 @@ import { GenderType, LanguageLevel, Languages, VoiceModels } from "../types/lang
 import { Subscription } from "../types/subscription";
 import { IUser } from "../types/user";
 import { UploadBase64AsImage, UploadBufferAsAudio, UploadTextAsFile } from './upload';
-import { GenerateBufferFromText } from '../modules/google';
+import { GenerateBufferFromText as GoogleGenerateBufferFromText } from '../modules/google';
+import { GenerateBufferFromText as OpenaiGenerateBufferFromText } from '../modules/openai/tts';
 import { GenerateImageFromText } from '../modules/openai/image';
 import { info } from 'firebase-functions/logger';
 
@@ -20,7 +21,8 @@ interface IGenerateStoryProps {
     voiceGenderType: GenderType,
     customStoryDescriptor: string | null,
     referanceStory: ReferanceStory | null,
-    dialogues: boolean
+    dialogues: boolean,
+    ttsVersion?: "Google" | "OpenAI"
 }
 
 interface IGenerateStoryResponse {
@@ -32,7 +34,7 @@ interface IGenerateStoryResponse {
     voiceModelType: VoiceModels
 }
 
-export async function GenerateStory({ dialogues, charaters, environments, storyId, user, genres, language, languageLevel, wordCount, customStoryDescriptor, referanceStory, voiceGenderType }: IGenerateStoryProps): Promise<IGenerateStoryResponse> {
+export async function GenerateStory({ ttsVersion = "Google", dialogues, charaters, environments, storyId, user, genres, language, languageLevel, wordCount, customStoryDescriptor, referanceStory, voiceGenderType }: IGenerateStoryProps): Promise<IGenerateStoryResponse> {
     if (!user.subscription) throw Error("No Subscription yet")
 
     const subscription = Subscription[user.subscription];
@@ -60,7 +62,9 @@ export async function GenerateStory({ dialogues, charaters, environments, storyI
 
     const storyFileLink = await UploadTextAsFile(story, `users/${user.id}`, storyId)
 
-    const buffer = await GenerateBufferFromText({ text: story, languageCode: language, genderType: voiceGenderType, model: subscription.voicType == "Advanced" ? "Neural2" : "Standard" })
+    const buffer = ttsVersion === "Google" ?
+        await GoogleGenerateBufferFromText({ text: story, languageCode: language, genderType: voiceGenderType, model: subscription.voicType == "Advanced" ? "Neural2" : "Standard" }) :
+        await OpenaiGenerateBufferFromText({ text: story, genderType: voiceGenderType, model: subscription.voicType == "Advanced" ? "hd" : "basic" })
     const { url: audioFileLink, durationInSeconds } = await UploadBufferAsAudio(buffer, `users/${user.id}`, storyId)
 
 

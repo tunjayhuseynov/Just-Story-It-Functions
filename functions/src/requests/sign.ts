@@ -13,15 +13,28 @@ export const SignNewUser = auth.user().onCreate(async (userEvent) => {
             username: userEvent.email ?? userEvent.uid,
             name: null,
             subscription: "",
-            customCharacters: {},
-            customEnvironments: {},
+            customCharacters: {
+                "luckyball": {
+                    name: "Luna Evergreen",
+                    description: "Imaginative storyteller with a quill in hand, weaving enchanting tales of wonder.",
+                    id: "luckyball",
+                    image: null
+                }
+            },
+            customEnvironments: {
+                "luckyteam": {
+                    name: "Enchanted Forest",
+                    description: "Luna's creative haven, surrounded by ancient trees and vibrant fireflies, where every word becomes a magical journey.",
+                    id: "luckyteam",
+                    image: null
+                }
+            },
             createdAt: new Date().getTime(),
             remaningQuoteInSeconds: 0,
             totalUsedInSeconds: 0,
             isSubscriptionCanceled: false,
             offers: {
-                ios: {},
-                android: {}
+
             },
             productChange: null,
             hasEverSubscribed: false
@@ -38,7 +51,18 @@ export const SignNewUser = auth.user().onCreate(async (userEvent) => {
 
 export const DeleteUser = auth.user().onDelete(async (userEvent) => {
     try {
-        await adminApp.firestore().collection(Collections.Users).doc(userEvent.uid).delete()
+        const mainDoc = adminApp.firestore().collection(Collections.Users).doc(userEvent.uid);
+        for (const subcollection of await mainDoc.listCollections()) {
+            const batch = adminApp.firestore().batch();
+
+            const docs = await subcollection.get()
+            for (const doc of docs.docs) {
+                batch.delete(doc.ref);
+            }
+            await batch.commit()
+        }
+
+        await mainDoc.delete()
     } catch (err) {
         const msg = (err as Error).message;
         error(msg)

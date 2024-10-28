@@ -7,8 +7,9 @@ import { Collections } from "../types/collections";
 import { Subscription } from "../types/subscription";
 import { info } from "firebase-functions/logger";
 import { FieldValue } from "firebase-admin/firestore";
+import { IUser } from "../types/user";
 
-export const subscriptionEvent = onDocumentWritten({ document: "events/{docId}", maxInstances: 10, memory: "512MiB" }, (event) => {
+export const subscriptionEvent = onDocumentWritten({ document: "events/{docId}", maxInstances: 10, memory: "512MiB" }, async (event) => {
     if (event.data?.after.exists) {
         const data = event.data.after.data();
         info("Data")
@@ -29,7 +30,7 @@ export const subscriptionEvent = onDocumentWritten({ document: "events/{docId}",
                 });
             } else if (event.type == "CANCELLATION") {
                 adminApp.firestore().collection(Collections.Users).doc(event.app_user_id).update({
-                    subscription: null,
+                    // subscription: null,
                     isSubscriptionCanceled: true,
                     productChange: null
                 });
@@ -47,6 +48,29 @@ export const subscriptionEvent = onDocumentWritten({ document: "events/{docId}",
                     adminApp.firestore().collection(Collections.Users).doc(event.app_user_id).update({
                         remaningQuoteInSeconds: FieldValue.increment(minutes * 60),
                     });
+                }
+            } else if (event.type == "TRANSFER") {
+                const from = event.transferred_from?.at(0)?.includes("$RCAnonymousID") ? event.transferred_from?.at(1) : event.transferred_from?.at(0);
+                const to = event.transferred_to?.at(0)?.includes("$RCAnonymousID") ? event.transferred_to?.at(1) : event.transferred_to?.at(0);
+
+                if (from && to) {
+                    const fromUserDoc = await adminApp.firestore().collection(Collections.Users).doc(from).get()
+
+                    if (fromUserDoc.data()) {
+                        const fromUser = fromUserDoc.data() as IUser
+
+                        await adminApp.firestore().collection(Collections.Users).doc(to).update({
+                            subscription: fromUser.subscription,
+                            productChange: fromUser.productChange,
+                            remaningQuoteInSeconds: fromUser.remaningQuoteInSeconds,
+                            hasEverSubscribed: fromUser.hasEverSubscribed,
+                        })
+                        await adminApp.firestore().collection(Collections.Users).doc(from).update({
+                            subscription: null,
+                            productChange: null,
+                            remaningQuoteInSeconds: 0,
+                        })
+                    }
                 }
             }
         }

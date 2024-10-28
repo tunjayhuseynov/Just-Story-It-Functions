@@ -1,10 +1,17 @@
 import { DeleteDiscoveryStory, GenerateDiscoveryStory } from './requests/admin/discoveryStory';
 import * as Story from "./requests/story";
+// import * as TestStory from "./requests/test/story";
 import * as Sign from "./requests/sign";
 import * as RC from "./requests/revenueCat";
 import { deleteTriggerPlaylist, updateTriggerPlaylistToStory, updateTriggerStoryToPlaylist } from './requests/playlist';
-import * as Migration from "./requests/migration";
+// import * as Migration from "./requests/migration";
 
+
+// export const test = {
+//     get: {
+//         story: TestStory.GetStory
+//     }
+// }
 
 export const get = {
     story: Story.GetStory
@@ -29,13 +36,8 @@ export const deletion = {
     user: Sign.DeleteUser
 }
 
-export const revenue = {
-    cat: {
-        subscription: {
-            event: RC.subscriptionEvent
-        }
-    }
-}
+export const revenueCatSubscriptionEvent = RC.subscriptionEvent
+
 
 export const admin = {
     generate: {
@@ -52,4 +54,4 @@ export const admin = {
 
 // MIGRATION IN LOCAL ONLY
 
-export const SubscriptionPackageMigration = Migration.SubscriptionPackageMigration
+// export const SubscriptionPackageMigration = Migration.SubscriptionPackageMigration

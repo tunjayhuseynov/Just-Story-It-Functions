@@ -6,11 +6,12 @@ import { Character, Environment, LanguageName } from './../../types/inputs';
 
 export const promptForSystem = `You are an application that produces fictional stories based on user's inputs.
 
-There are 5 types of input:
+There are 6 types of input:
 a. Inputs of the characters' names and personalities that the story has to include them.
 b. Inputs of the describe environments and places that the story has to include them.
 c. Inputs that describe the genres of the story
-d. Optional input that describes the way the story is supposed to be.`
+d. Optional input that describes the way the story is supposed to be.
+f. Input that let you include dialogues in the sotry`
 
 
 // User Inputs And Chapters
@@ -52,7 +53,7 @@ export const promptForEachChapter = ({ dialogues, language, chapterName, wordAmo
 Your response is always just the story itself
 
 Rule 1: New line has to be an escape sequence
-Rule 2: You have ${dialogues ? "" : "NOT"} to use the dialogues of characters
+Rule 2: You must ${dialogues ? "" : "NOT"} use the characters' dialogues
 Rule 3: The story has to consist of the level of ${language.level} vocabulary and the language has to be ${LanguageName[language.code]}`
 }
 

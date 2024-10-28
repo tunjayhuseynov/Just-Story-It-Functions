@@ -1,12 +1,12 @@
 import { IChapterResponse, IUserInputsAndChaptersResponse, askExtraWords, promptForEachChapter, promptForSystem, promptForUserInputsAndChapters } from './prompts';
 import { ReferanceStory } from "../../types/inputs";
 import type { Character, CustomStoryDescriptor, Environment } from "../../types/inputs";
-import { ChatCompletionRequestMessage } from "openai"
 import type { LanguageLevel, Languages } from "../../types/languages";
 import { GptType } from "../../types/gpt";
 import { defineSecret } from "firebase-functions/params";
 import { RequestChatGPT } from "./request";
 import { info } from 'firebase-functions/logger';
+import { ChatCompletionMessageParam } from 'openai/resources';
 
 export const openaiApiKey = defineSecret("OpenAI_API_Key");
 
@@ -31,7 +31,7 @@ export async function GenerateStoryFromText(
     if (referanceStory && aiModel.includes("gpt-3.5")) {
         referanceStory = null
     }
-    const messages: ChatCompletionRequestMessage[] = [
+    const messages: ChatCompletionMessageParam[] = [
         {
             role: "system", content: promptForSystem
         },
@@ -45,13 +45,13 @@ export async function GenerateStoryFromText(
 
     messages.push({ role: "user", content: chapterPrompt })
 
+    info("Chapters is processing")
     const chaptersResponse = await RequestChatGPT(messages, aiModel.includes("gpt-4") ? aiModel : "gpt-3.5-turbo", 0)
     if (!chaptersResponse?.content) throw Error("Content is undefined");
 
     const chapters = JSON.parse(chaptersResponse.content) as IUserInputsAndChaptersResponse;
     info(chapters)
     messages.push(chaptersResponse)
-
 
     const storyArray: string[] = []
 
@@ -90,7 +90,7 @@ export async function GenerateStoryFromText(
         coverImagePrompt = chapters.coverImagePrompt;
     }
 
-
+    console.log("Generation done")
     return { title, coverImagePrompt, story: mainStory }
 }
 

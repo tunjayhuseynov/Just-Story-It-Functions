@@ -7,14 +7,14 @@ export interface IUser {
     id: string,
     username: string,
     name: string | null
-    subscription: string,
+    subscription: string | null,
     isSubscriptionCanceled: boolean,
     productChange: string | null,
     customCharacters: { [id: string]: Character },
     customEnvironments: { [id: string]: Environment },
     remaningQuoteInSeconds: number,
     totalUsedInSeconds: number,
-    offers: { ios: { [storeProductId: string]: { storeProductId: string, offerProductId: string } }, android: { [storeProductId: string]: { storeProductId: string, offerProductId: string } } }
+    offers: { [storeProductId: string]: { storeProductId: string, offerProductId: string } }
     createdAt: number,
     hasEverSubscribed: boolean;
     notificationId?: string

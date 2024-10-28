@@ -27,7 +27,7 @@ interface IResponse {
 }
 
 // We may split GetStory functions into 2 parts. GetStory for 12 minutes and under, and GetStory for 13 minutes and above
-export const GetStory = onCall<IRequest, Promise<IResponse>>({ maxInstances: 10, timeoutSeconds: 300, memory: "512MiB", secrets: [openaiApiKey] }, async (request) => {
+export const GetStory = onCall<IRequest, Promise<IResponse>>({ maxInstances: 10, timeoutSeconds: 300, memory: "512MiB", secrets: [openaiApiKey], concurrency: 1 }, async (request) => {
     try {
         const uid = request.auth?.uid
         info("Language:")
@@ -57,7 +57,8 @@ export const GetStory = onCall<IRequest, Promise<IResponse>>({ maxInstances: 10,
             customStoryDescriptor: request.data.customStoryDescriptor,
             referanceStory: request.data.referanceStory,
             charaters: request.data.characters,
-            environments: request.data.environments
+            environments: request.data.environments,
+            ttsVersion: "OpenAI"
         })
 
         const response: IResponse = {

@@ -16,7 +16,9 @@ export interface IPurchaseEvent {
     entitlement_ids: string[],
     presented_offering_id: string,
     expiration_reason?: string,
-    product_id?: string
+    product_id?: string,
+    transferred_from?: string[],
+    transferred_to?: string[],
     cancel_reason?: string
-    type: "CANCELLATION" | "EXPIRATION" | "INITIAL_PURCHASE" | "RENEWAL" | "PRODUCT_CHANGE" | "NON_RENEWING_PURCHASE"
+    type: "CANCELLATION" | "EXPIRATION" | "INITIAL_PURCHASE" | "RENEWAL" | "PRODUCT_CHANGE" | "NON_RENEWING_PURCHASE" | "TRANSFER"
 }

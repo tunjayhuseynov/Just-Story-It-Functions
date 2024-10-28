@@ -1,4 +1,4 @@
-export type Languages = "en-US" | "es-ES" | "fr-FR" | "de-DE" | "it-IT" | "da-DK" | "fil-PH"
+export type Languages = "en-US" | "es-ES" | "fr-FR" | "de-DE" | "it-IT" | "da-DK" | "fil-PH" | "tr-TR"
 
 export type LanguageLevel = "Beginner" | "Intermadiate" | "Advanced"
 
@@ -15,7 +15,8 @@ export const LangaugeSecondsToWordsDeltaIndex: { [lan in Languages]: number } = 
     "es-ES": 2.795,
     "fil-PH": 2.795,
     "fr-FR": 2.795,
-    "it-IT": 2.795
+    "it-IT": 2.795,
+    "tr-TR": 2.795,
 }
 
 export const LanguageTypes: LanguageType = {
@@ -59,4 +60,5 @@ export const LanguageTypes: LanguageType = {
     "it-IT": [],
     "fil-PH": [],
     "fr-FR": [],
+    "tr-TR": [],
 }

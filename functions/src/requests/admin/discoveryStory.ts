@@ -10,7 +10,7 @@ import { IStory } from "../../types/story";
 import { VoiceType } from "../../types/subscription";
 import { GenderType } from "../../types/languages";
 
-export const GenerateDiscoveryStory = https.onCall<IIncomingDiscoveryStory>({ maxInstances: 10 }, async (event) => {
+export const GenerateDiscoveryStory = https.onCall<IIncomingDiscoveryStory>({ maxInstances: 10, concurrency: 1 }, async (event) => {
     const isAdmin = event.auth?.token["admin"];
     if (!isAdmin) return new HttpsError("unauthenticated", "You are not an admin");
 
@@ -54,7 +54,7 @@ export const GenerateDiscoveryStory = https.onCall<IIncomingDiscoveryStory>({ ma
 
 })
 
-export const DeleteDiscoveryStory = https.onCall<{ storyId: string }>({ maxInstances: 10 }, async (event) => {
+export const DeleteDiscoveryStory = https.onCall<{ storyId: string }>({ maxInstances: 10, concurrency: 1 }, async (event) => {
     const isAdmin = event.auth?.token["admin"];
     if (!isAdmin) return new HttpsError("unauthenticated", "You are not an admin");
 

@@ -27,5 +27,6 @@ export const LanguageName: { [n in Languages]: string } = {
     "da-DK": "Danish",
     "de-DE": "German",
     "fil-PH": "Pilipino",
-    "it-IT": "Italian"
+    "it-IT": "Italian",
+    "tr-TR": "Turkish"
 }
