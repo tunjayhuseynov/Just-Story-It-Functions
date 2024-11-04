@@ -12,15 +12,12 @@ import { IUser } from "../types/user";
 export const subscriptionEvent = onDocumentWritten({ document: "events/{docId}", maxInstances: 10, memory: "512MiB" }, async (event) => {
     if (event.data?.after.exists) {
         const data = event.data.after.data();
-        info("Data")
-        info(data ?? "Null")
         if (data) {
             const event = data as IPurchaseEvent;
+            info(`Event: ${data}`)
             if (event.type == "RENEWAL" || event.type == "INITIAL_PURCHASE") {
                 const entitlements = event.entitlement_ids;
                 const plan = Subscription[entitlements[0]]
-                info("Plan")
-                info(plan)
                 adminApp.firestore().collection(Collections.Users).doc(event.app_user_id).update({
                     subscription: plan.revenueCat.identifier,
                     remaningQuoteInSeconds: plan.freeUsageSecondsAmount,
@@ -47,6 +44,17 @@ export const subscriptionEvent = onDocumentWritten({ document: "events/{docId}",
 
                     adminApp.firestore().collection(Collections.Users).doc(event.app_user_id).update({
                         remaningQuoteInSeconds: FieldValue.increment(minutes * 60),
+                    });
+                } else {
+                    const entitlements = event.entitlement_ids;
+                    const plan = Subscription[entitlements[0]]
+
+                    adminApp.firestore().collection(Collections.Users).doc(event.app_user_id).update({
+                        subscription: plan.revenueCat.identifier,
+                        remaningQuoteInSeconds: plan.freeUsageSecondsAmount,
+                        isSubscriptionCanceled: false,
+                        productChange: null,
+                        hasEverSubscribed: true
                     });
                 }
             } else if (event.type == "TRANSFER") {
