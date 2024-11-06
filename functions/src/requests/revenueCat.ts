@@ -39,7 +39,7 @@ export const subscriptionEvent = onDocumentWritten({ document: "events/{docId}",
                     productChange: null
                 });
             } else if (event.type == "NON_RENEWING_PURCHASE") {
-                if (event.presented_offering_id == "Extra Minutes" && event.product_id) {
+                if (event.product_id && event.product_id.toLowerCase().includes("extra_minutes")) {
                     const minutes = parseInt(event.product_id.split("_")[0]);
 
                     adminApp.firestore().collection(Collections.Users).doc(event.app_user_id).update({
