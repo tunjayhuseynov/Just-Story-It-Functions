@@ -1,7 +1,7 @@
 import { https } from "firebase-functions/v2";
 import { HttpsError } from "firebase-functions/v2/https";
 import { IIncomingDiscoveryStory } from "../../types/discoverStory";
-import { GenerateBufferFromText } from "../../modules/google";
+import { GenerateBufferFromText } from "../../modules/openai/tts";
 import { UploadBufferAsAudio, UploadTextAsFile } from "../../services/upload";
 import { v1 } from 'uuid'
 import { AdminFunctions } from "../../services/admin";
@@ -18,7 +18,7 @@ export const GenerateDiscoveryStory = https.onCall<IIncomingDiscoveryStory>({ ma
 
     const storyId = v1()
 
-    const buffer = await GenerateBufferFromText({ text: data.storyText, languageCode: data.language, genderType: data.genderType, model: data.voiceType == "Advanced" ? "Neural2" : "Standard" })
+    const buffer = await GenerateBufferFromText({ text: data.storyText, genderType: data.genderType, model: data.voiceType == "Advanced" ? "hd" : "basic" })
 
     const storyFileLink = await UploadTextAsFile(data.storyText, "discoveryStories", storyId)
     const { url: audioFileLink, durationInSeconds } = await UploadBufferAsAudio(buffer, "discoveryStories", storyId)
