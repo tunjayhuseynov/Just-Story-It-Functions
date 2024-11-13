@@ -11,6 +11,7 @@ export async function GenerateImageFromText(text: string) {
         prompt: text,
         response_format: "b64_json",
         n: 1,
+        model: "dall-e-3",
         size: "512x512"
     });
 

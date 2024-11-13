@@ -10,7 +10,6 @@ import { ChatCompletionMessageParam } from 'openai/resources';
 
 export const openaiApiKey = defineSecret("OpenAI_API_Key");
 
-
 export interface IGenerateStoryFromText {
     aiModel: GptType,
     genres: string[],

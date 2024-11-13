@@ -18,12 +18,21 @@ export const subscriptionEvent = onDocumentWritten({ document: "events/{docId}",
             if (event.type == "RENEWAL" || event.type == "INITIAL_PURCHASE") {
                 const entitlements = event.entitlement_ids;
                 const plan = Subscription[entitlements[0]]
+
+                const additionalParams : {[name: string]: unknown} = {}
+                
+                if (event.price && event.price != plan.price) {
+                    additionalParams[`offers.${plan.revenueCat.Android.identifierMonthly}`] = FieldValue.delete()
+                    additionalParams[`offers.${plan.revenueCat.IOS.identifierMonthly}`] = FieldValue.delete()
+                }
+
                 adminApp.firestore().collection(Collections.Users).doc(event.app_user_id).update({
                     subscription: plan.revenueCat.identifier,
                     remaningQuoteInSeconds: plan.freeUsageSecondsAmount,
                     isSubscriptionCanceled: false,
                     productChange: null,
-                    hasEverSubscribed: true
+                    hasEverSubscribed: true,
+                    ...additionalParams
                 });
             } else if (event.type == "CANCELLATION") {
                 adminApp.firestore().collection(Collections.Users).doc(event.app_user_id).update({

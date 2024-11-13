@@ -20,5 +20,6 @@ export interface IPurchaseEvent {
     transferred_from?: string[],
     transferred_to?: string[],
     cancel_reason?: string
-    type: "CANCELLATION" | "EXPIRATION" | "INITIAL_PURCHASE" | "RENEWAL" | "PRODUCT_CHANGE" | "NON_RENEWING_PURCHASE" | "TRANSFER"
+    type: "CANCELLATION" | "EXPIRATION" | "INITIAL_PURCHASE" | "RENEWAL" | "PRODUCT_CHANGE" | "NON_RENEWING_PURCHASE" | "TRANSFER",
+    price?: number
 }

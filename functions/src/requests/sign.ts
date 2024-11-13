@@ -1,5 +1,5 @@
 import { Collections } from '../types/collections';
-import { auth } from "firebase-functions";
+import { auth } from "firebase-functions/v1";
 import { IUser } from "../types/user";
 import { adminApp } from "../admin";
 import { HttpsError } from 'firebase-functions/v2/https';
