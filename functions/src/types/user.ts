@@ -6,6 +6,7 @@ import { Subscription } from "./subscription"
 export interface IUser {
     id: string,
     username: string,
+    isAnonymous: boolean,
     name: string | null
     subscription: string | null,
     isSubscriptionCanceled: boolean,

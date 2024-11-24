@@ -11,7 +11,7 @@ import { VoiceType } from "../../types/subscription";
 import { GenderType } from "../../types/languages";
 import { openaiApiKey } from "../../modules/openai";
 
-export const GenerateDiscoveryStory = https.onCall<IIncomingDiscoveryStory>({ maxInstances: 10, concurrency: 1, secrets: [openaiApiKey] }, async (event) => {
+export const GenerateDiscoveryStory = https.onCall<IIncomingDiscoveryStory>({ maxInstances: 10, concurrency: 1, timeoutSeconds: 540, secrets: [openaiApiKey] }, async (event) => {
     const isAdmin = event.auth?.token["admin"];
     if (!isAdmin) return new HttpsError("unauthenticated", "You are not an admin");
 

@@ -6,10 +6,12 @@ import { HttpsError } from 'firebase-functions/v2/https';
 import { error } from 'firebase-functions/logger';
 
 export const SignNewUser = auth.user().onCreate(async (userEvent) => {
-
     try {
+        const isAnonymous = userEvent.providerData.length === 0
+
         const user: IUser = {
             id: userEvent.uid,
+            isAnonymous,
             username: userEvent.email ?? userEvent.uid,
             name: null,
             subscription: "",
