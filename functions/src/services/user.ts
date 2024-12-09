@@ -50,5 +50,5 @@ async function UpdateRemainingQuote(user: IUser, story: IStory) {
 }
 
 export async function isQuoteSufficient(user: IUser, avarageDuration: number) {
-    return user.remaningQuoteInSeconds - avarageDuration < -1
+    return user.remaningQuoteInSeconds - avarageDuration + 60 < -1
 }

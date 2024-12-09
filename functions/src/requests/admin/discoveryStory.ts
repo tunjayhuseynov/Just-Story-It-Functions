@@ -1,7 +1,7 @@
 import { https } from "firebase-functions/v2";
 import { HttpsError } from "firebase-functions/v2/https";
 import { IIncomingDiscoveryStory } from "../../types/discoverStory";
-import { GenerateBufferFromText } from "../../modules/openai/tts";
+import { GenerateBufferFromText } from "../../modules/V1/openai/tts";
 import { UploadBufferAsAudio, UploadTextAsFile } from "../../services/upload";
 import { v1 } from 'uuid'
 import { AdminFunctions } from "../../services/admin";
@@ -9,7 +9,7 @@ import { MoveFile } from "../../services/storage";
 import { IStory } from "../../types/story";
 import { VoiceType } from "../../types/subscription";
 import { GenderType } from "../../types/languages";
-import { openaiApiKey } from "../../modules/openai";
+import { openaiApiKey } from "../../modules/V1/openai";
 
 export const GenerateDiscoveryStory = https.onCall<IIncomingDiscoveryStory>({ maxInstances: 10, concurrency: 1, timeoutSeconds: 540, secrets: [openaiApiKey], memory: "1GiB" }, async (event) => {
     const isAdmin = event.auth?.token["admin"];

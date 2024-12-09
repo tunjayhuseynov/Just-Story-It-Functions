@@ -1,13 +1,14 @@
-import { Character, Environment, ReferanceStory } from './../types/inputs';
-import { GenerateStoryFromText } from "../modules/V1/openai";
-import { GenderType, LanguageLevel, Languages, VoiceModels } from "../types/languages";
+import { Character, Environment, ReferanceStory } from '../types/inputs';
+import { GenerateStoryFromText } from "../modules/V2/openai";
+import { LanguageLevel, Languages, VoiceModels } from "../types/languages";
 import { ISubscriptionName, Subscription } from "../types/subscription";
 import { IUser } from "../types/user";
 import { UploadBase64AsImage, UploadBufferAsAudio, UploadTextAsFile } from './upload';
-import { GenerateBufferFromText as GoogleGenerateBufferFromText } from '../modules/V1/google';
-import { GenerateBufferFromText as OpenaiGenerateBufferFromText } from '../modules/V1/openai/tts';
-import { GenerateImageFromText } from '../modules/V1/openai/image';
+import { GenerateBufferFromText as OpenaiGenerateBufferFromText } from '../modules/V2/openai/tts';
+import { GenerateImageFromText } from '../modules/V2/openai/image';
 import { info } from 'firebase-functions/logger';
+import { SpeechCreateParams } from 'openai/resources/audio/speech';
+import { TNarrationStyle } from '../types/narrationStyles';
 
 interface IGenerateStoryProps {
     storyId: string,
@@ -18,11 +19,10 @@ interface IGenerateStoryProps {
     genres: string[],
     language: Languages,
     languageLevel: LanguageLevel,
-    voiceGenderType: GenderType,
+    voice: SpeechCreateParams["voice"]
+    narrationStyle: TNarrationStyle,
     customStoryDescriptor: string | null,
     referanceStory: ReferanceStory | null,
-    dialogues: boolean,
-    ttsVersion?: "Google" | "OpenAI"
 }
 
 interface IGenerateStoryResponse {
@@ -34,10 +34,8 @@ interface IGenerateStoryResponse {
     voiceModelType: VoiceModels
 }
 
-export async function GenerateStory({ ttsVersion = "Google", dialogues, charaters, environments, storyId, user, genres, language, languageLevel, wordCount, customStoryDescriptor, referanceStory, voiceGenderType }: IGenerateStoryProps): Promise<IGenerateStoryResponse> {
-    if (!user.subscription) throw Error("No Subscription yet")
-
-    const subscription = Subscription[user.subscription as ISubscriptionName];
+export async function GenerateStoryV2({ charaters, environments, storyId, user, genres, language, languageLevel, wordCount, customStoryDescriptor, referanceStory, narrationStyle, voice }: IGenerateStoryProps): Promise<IGenerateStoryResponse> {
+    const subscription = Subscription[user.subscription as ISubscriptionName] ?? Subscription["The Little Prince"];
     let coverImageLink = ""
     info("Word count:")
     info(wordCount)
@@ -45,14 +43,14 @@ export async function GenerateStory({ ttsVersion = "Google", dialogues, charater
         aiModel: subscription.gptModel,
         characters: charaters,
         environments: environments,
-        dialogues: subscription.dialogues == true ? dialogues : false,
         genres,
         language,
         languageLevel,
         minimumWordCount: wordCount,
         isCoverImagePromptNeeded: subscription.coverImage,
         customStoryDescriptor,
-        referanceStory
+        referanceStory,
+        narrationStyle
     })
 
     if (subscription.coverImage && coverImagePrompt) {
@@ -62,9 +60,8 @@ export async function GenerateStory({ ttsVersion = "Google", dialogues, charater
 
     const storyFileLink = await UploadTextAsFile(story, `users/${user.id}`, storyId)
 
-    const buffer = ttsVersion === "Google" ?
-        await GoogleGenerateBufferFromText({ text: story, languageCode: language, genderType: voiceGenderType, model: subscription.voicType == "Advanced" ? "Neural2" : "Standard" }) :
-        await OpenaiGenerateBufferFromText({ text: story, genderType: voiceGenderType, model: subscription.voicType == "Advanced" ? "hd" : "basic" })
+    const buffer = await OpenaiGenerateBufferFromText({ text: story, voice, model: subscription.voicType == "Advanced" ? "hd" : "basic" })
+
     const { url: audioFileLink, durationInSeconds } = await UploadBufferAsAudio(buffer, `users/${user.id}`, storyId)
 
 

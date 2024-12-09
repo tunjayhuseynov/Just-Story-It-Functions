@@ -3,8 +3,10 @@ import { GptType } from "./gpt"
 export type VoiceType = "Basic" | "Advanced"
 type SubscriptionType = "Monthly" | "Annually" | "Enterprise"
 
+export type ISubscriptionName = "Starter" | "The Little Prince" | "The Great Gatsby" | "The Prime Shakespeare" | "The Greatest of All Time" | "Enterprise"
+
 type ISubscription = {
-    [name: string]: {
+    [name in ISubscriptionName]: {
         id: string,
         type: SubscriptionType
         name: string,
@@ -232,4 +234,4 @@ export const Subscription: ISubscription = {
         discountPercentage: 0,
         isRecommended: false,
     },
-}
+} satisfies ISubscription

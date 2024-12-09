@@ -1,8 +1,8 @@
 import { IChapterResponse, IUserInputsAndChaptersResponse, askExtraWords, promptForEachChapter, promptForSystem, promptForUserInputsAndChapters } from './prompts';
-import { ReferanceStory } from "../../types/inputs";
-import type { Character, CustomStoryDescriptor, Environment } from "../../types/inputs";
-import type { LanguageLevel, Languages } from "../../types/languages";
-import { GptType } from "../../types/gpt";
+import { ReferanceStory } from "../../../types/inputs";
+import type { Character, CustomStoryDescriptor, Environment } from "../../../types/inputs";
+import type { LanguageLevel, Languages } from "../../../types/languages";
+import { GptType } from "../../../types/gpt";
 import { defineSecret } from "firebase-functions/params";
 import { RequestChatGPT } from "./request";
 import { info } from 'firebase-functions/logger';

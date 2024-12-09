@@ -1,12 +1,14 @@
 import { HttpsError, onCall } from "firebase-functions/v2/https";
 import { Character, CustomStoryDescriptor, Environment, ReferanceStory } from "../types/inputs";
-import { GenderType, LanguageLevel, Languages, LangaugeSecondsToWordsDeltaIndex } from "../types/languages";
+import { LanguageLevel, Languages, LangaugeSecondsToWordsDeltaIndex } from "../types/languages";
 import { AddStoryToUser, getUserFromDB, isQuoteSufficient } from "../services/user";
-import { GenerateStory } from "../services/generate";
+import { GenerateStoryV2 } from "../services/generate-v2";
 import { v1 as uuid } from 'uuid'
 import { IStory } from "../types/story";
 import { error, info } from 'firebase-functions/logger';
-import { openaiApiKey } from "../modules/V1/openai";
+import { openaiApiKey } from "../modules/V2/openai";
+import { TNarrationStyle } from "../types/narrationStyles";
+import { SpeechCreateParams } from "openai/resources/audio/speech";
 
 interface IRequest {
     genres: string[],
@@ -16,9 +18,9 @@ interface IRequest {
     languageLevel: LanguageLevel,
     customStoryDescriptor: CustomStoryDescriptor | null,
     averageDurationInSeconds: number,
-    dialogues: boolean,
-    voiceGenderType: GenderType,
     referanceStory: ReferanceStory | null,
+    narrationStyle: TNarrationStyle
+    voice: SpeechCreateParams["voice"]
 }
 
 interface IResponse {
@@ -27,7 +29,7 @@ interface IResponse {
 }
 
 // We may split GetStory functions into 2 parts. GetStory for 12 minutes and under, and GetStory for 13 minutes and above
-export const GetStory = onCall<IRequest, Promise<IResponse>>({ maxInstances: 10, timeoutSeconds: 540, memory: "512MiB", secrets: [openaiApiKey], concurrency: 10 }, async (request) => {
+export const GetStoryV2 = onCall<IRequest, Promise<IResponse>>({ maxInstances: 10, timeoutSeconds: 540, memory: "512MiB", secrets: [openaiApiKey], concurrency: 10 }, async (request) => {
     try {
         const uid = request.auth?.uid
         info("Language:")
@@ -45,20 +47,19 @@ export const GetStory = onCall<IRequest, Promise<IResponse>>({ maxInstances: 10,
 
         if (await isQuoteSufficient(user, request.data.averageDurationInSeconds)) throw new Error("No enough usage")
 
-        const { audioFileLink, coverImageLink, storyFileLink, storyTitle, durationInSeconds, voiceModelType } = await GenerateStory({
+        const { audioFileLink, coverImageLink, storyFileLink, storyTitle, durationInSeconds, voiceModelType } = await GenerateStoryV2({
             storyId,
             user,
-            dialogues: request.data.dialogues,
             language: request.data.language,
             genres: request.data.genres,
             languageLevel: request.data.languageLevel,
             wordCount: Math.ceil(request.data.averageDurationInSeconds * secondToWordDelta),
-            voiceGenderType: request.data.voiceGenderType,
             customStoryDescriptor: request.data.customStoryDescriptor,
             referanceStory: request.data.referanceStory,
             charaters: request.data.characters,
             environments: request.data.environments,
-            ttsVersion: "OpenAI"
+            narrationStyle: request.data.narrationStyle,
+            voice: request.data.voice
         })
 
         const response: IResponse = {
@@ -78,10 +79,11 @@ export const GetStory = onCall<IRequest, Promise<IResponse>>({ maxInstances: 10,
                 characters: request.data.characters,
                 durationInSeconds,
                 playlist: [],
-                dialogues: request.data.dialogues,
-                genderType: request.data.voiceGenderType,
                 languageLevel: request.data.languageLevel,
-                voiceModel: voiceModelType
+                voiceModel: voiceModelType,
+                narrationStyle: request.data.narrationStyle,
+                voice: request.data.voice,
+                version: "v2"
             }
         }
 

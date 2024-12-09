@@ -6,7 +6,7 @@ import { GenerateStory } from "../../services/generate";
 import { v1 as uuid } from 'uuid'
 import { IStory } from "../../types/story";
 import { error, info } from 'firebase-functions/logger';
-import { openaiApiKey } from "../../modules/openai";
+import { openaiApiKey } from "../../modules/V1/openai";
 import cors from 'cors';
 const corsHandler = cors({ origin: true });
 

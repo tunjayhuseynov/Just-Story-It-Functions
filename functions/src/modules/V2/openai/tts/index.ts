@@ -1,20 +1,19 @@
 import { info } from "firebase-functions/logger";
-import { GenderType, Languages, VoiceModels } from "../../types/languages";
 import { TextToSpeech } from "./tts";
-import { Breaker, ParagraphSplitter } from "../../utils/textFormatter";
+import { ParagraphSplitter } from "../../../../utils/textFormatter";
+import { SpeechCreateParams } from "openai/resources/audio/speech";
 // import * as path from 'path';
 interface IProps {
     text: string,
-    languageCode: Languages,
-    genderType: GenderType,
-    model: VoiceModels
+    voice: SpeechCreateParams["voice"],
+    model: "basic" | "hd"
 }
 
 
-export async function GenerateBufferFromText({ text, genderType, languageCode, model }: IProps) {
+export async function GenerateBufferFromText({ text, voice, model }: IProps) {
     const CHARACTER_LIMIT = 3000
 
-    const textArray: string[] = ParagraphSplitter(text, CHARACTER_LIMIT).map(s => Breaker(s))
+    const textArray: string[] = ParagraphSplitter(text, CHARACTER_LIMIT)
 
     info("Text On TTS Generate Function:")
     info(text)
@@ -25,7 +24,7 @@ export async function GenerateBufferFromText({ text, genderType, languageCode, m
 
     const buffers = []
     for (const text of textArray) {
-        const buffer = await TextToSpeech({ text, genderType, languageCode, model })
+        const buffer = await TextToSpeech({ text, voice, model })
         info("new buffer:")
         info(buffer.byteLength)
         buffers.push(buffer)

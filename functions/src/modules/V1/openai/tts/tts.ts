@@ -1,4 +1,4 @@
-import { GenderType } from "../../../types/languages";
+import { GenderType } from "../../../../types/languages";
 import { info } from "firebase-functions/logger";
 import OpenAI from "openai";
 import { openaiApiKey } from "..";

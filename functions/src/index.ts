@@ -1,3 +1,4 @@
+import { GetStoryV2 } from './requests/story-v2';
 import { DeleteDiscoveryStory, GenerateDiscoveryStory } from './requests/admin/discoveryStory';
 import * as Story from "./requests/story";
 // import * as TestStory from "./requests/test/story";
@@ -14,7 +15,10 @@ import { deleteTriggerPlaylist, updateTriggerPlaylistToStory, updateTriggerStory
 // }
 
 export const get = {
-    story: Story.GetStory
+    story: Story.GetStory,
+    v2: {
+        story: GetStoryV2
+    }
 }
 
 export const playlist = {

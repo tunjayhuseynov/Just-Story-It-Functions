@@ -1,5 +1,5 @@
-import { Languages } from '../../types/languages';
-import { Character, Environment, LanguageName } from './../../types/inputs';
+import { Languages } from '../../../types/languages';
+import { Character, Environment, LanguageName } from '../../../types/inputs';
 
 
 // Prompt for System

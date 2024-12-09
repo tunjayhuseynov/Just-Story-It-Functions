@@ -4,7 +4,7 @@ import {
 import { IPurchaseEvent } from "../types/revenueCat";
 import { adminApp } from "../admin";
 import { Collections } from "../types/collections";
-import { Subscription } from "../types/subscription";
+import { ISubscriptionName, Subscription } from "../types/subscription";
 import { info } from "firebase-functions/logger";
 import { FieldValue } from "firebase-admin/firestore";
 import { IUser } from "../types/user";
@@ -17,7 +17,7 @@ export const subscriptionEvent = onDocumentWritten({ document: "events/{docId}",
             info(`Event: ${data}`)
             if (event.type == "RENEWAL" || event.type == "INITIAL_PURCHASE") {
                 const entitlements = event.entitlement_ids;
-                const plan = Subscription[entitlements[0]]
+                const plan = Subscription[entitlements[0] as ISubscriptionName]
 
                 const additionalParams : {[name: string]: unknown} = {}
                 
@@ -56,7 +56,7 @@ export const subscriptionEvent = onDocumentWritten({ document: "events/{docId}",
                     });
                 } else {
                     const entitlements = event.entitlement_ids;
-                    const plan = Subscription[entitlements[0]]
+                    const plan = Subscription[entitlements[0] as ISubscriptionName]
 
                     adminApp.firestore().collection(Collections.Users).doc(event.app_user_id).update({
                         subscription: plan.revenueCat.identifier,

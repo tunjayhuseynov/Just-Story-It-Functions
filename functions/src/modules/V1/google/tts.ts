@@ -1,4 +1,4 @@
-import { LanguageTypes, Languages, GenderType, VoiceModels } from "../../types/languages";
+import { LanguageTypes, Languages, GenderType, VoiceModels } from "../../../types/languages";
 import { google } from "@google-cloud/text-to-speech/build/protos/protos";
 import textToSpeech from "@google-cloud/text-to-speech"
 import { info } from "firebase-functions/logger";

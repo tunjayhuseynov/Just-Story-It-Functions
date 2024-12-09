@@ -1,7 +1,9 @@
+import { SpeechCreateParams } from "openai/resources/audio/speech";
 import { Character, Environment } from "./inputs";
 import { GenderType, LanguageLevel, Languages, VoiceModels } from "./languages";
+import { TNarrationStyle } from "./narrationStyles";
 
-export interface IStory {
+export type IStory = ({ version?: "v1" } & {
     id: string,
     created_at: number;
     characters: Character[];
@@ -20,5 +22,27 @@ export interface IStory {
     dialogues: boolean,
     genderType: GenderType,
     languageLevel: LanguageLevel,
-    voiceModel: VoiceModels
-}
+    voiceModel: VoiceModels,
+})
+    |
+    ({ version: "v2" } & {
+        id: string,
+        created_at: number;
+        characters: Character[];
+        environments: Environment[];
+        customStoryDescriptor: string | null;
+        storyLink: string;
+        audioLink: string;
+        genres: string[],
+        coverImage: string | null;
+        images: string[];
+        title: string;
+        durationInSeconds: number;
+        language: Languages;
+        playlist: string[]
+
+        narrationStyle: TNarrationStyle,
+        voice: SpeechCreateParams["voice"]
+        languageLevel: LanguageLevel,
+        voiceModel: VoiceModels,
+    })
