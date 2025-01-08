@@ -5,6 +5,9 @@ import * as Story from "./requests/story";
 import * as Sign from "./requests/sign";
 import * as RC from "./requests/revenueCat";
 import { deleteTriggerPlaylist, updateTriggerPlaylistToStory, updateTriggerStoryToPlaylist } from './requests/playlist';
+import { SendVerificationLink, SendVerificationLinkOnSignup } from './requests/email/verifyLink';
+import { SendWelcomeCron } from './requests/email/welcome';
+import { SendResetPassword } from './requests/email/resetPassword';
 // import * as Migration from "./requests/migration";
 
 
@@ -55,6 +58,20 @@ export const admin = {
         }
     }
 }
+
+export const automated = {
+    email: {
+        verification: {
+            call: SendVerificationLink,
+            registration: SendVerificationLinkOnSignup
+        },
+        reset: {
+            password: SendResetPassword
+        }
+    }
+}
+
+export const SendWelcomeSchedule = SendWelcomeCron
 
 // MIGRATION IN LOCAL ONLY
 

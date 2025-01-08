@@ -12,4 +12,11 @@ export class AdminFunctions {
     async deleteDiscoveryStory(id: string) {
         return await new AdminCrud<IStory>(Collections.DiscoveryStories).Delete(id);
     }
+
+
+    // async setUserDiscount(userId: string, discount: number) {
+    //     return await new AdminCrud<number>(Collections.Users).Update(userId, { offers: {
+            
+    //     } });
+    // }
 }

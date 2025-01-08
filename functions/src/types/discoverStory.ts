@@ -1,5 +1,7 @@
-import { GenderType, Languages } from "./languages";
+import { SpeechCreateParams } from "openai/resources/audio/speech";
+import { Languages } from "./languages";
 import { VoiceType } from "./subscription";
+import { TNarrationStyle } from "./narrationStyles";
 
 
 
@@ -10,6 +12,7 @@ export interface IIncomingDiscoveryStory {
     language: Languages,
     storyText: string,
     voiceType: VoiceType,
-    genderType: GenderType,
+    voice: SpeechCreateParams["voice"],
+    narrationStyle: TNarrationStyle
     locked: boolean
 }

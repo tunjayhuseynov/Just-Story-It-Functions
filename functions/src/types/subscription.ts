@@ -8,6 +8,7 @@ export type ISubscriptionName = "Starter" | "The Little Prince" | "The Great Gat
 type ISubscription = {
     [name in ISubscriptionName]: {
         id: string,
+        active: boolean
         type: SubscriptionType
         name: string,
         price: number | null,
@@ -46,6 +47,7 @@ export const Subscription: ISubscription = {
         id: "Starter",
         name: "Starter",
         type: "Monthly",
+        active: false,
         revenueCat: {
             identifier: "Starter",
             Android: {
@@ -78,6 +80,7 @@ export const Subscription: ISubscription = {
         id: "The Little Prince",
         name: "The Little Prince",
         type: "Monthly",
+        active: true,
         allDiscoveryStoriesUnlocked: true,
         revenueCat: {
             identifier: "The Little Prince",
@@ -110,6 +113,7 @@ export const Subscription: ISubscription = {
         id: "The Great Gatsby",
         isRecommended: true,
         name: "The Great Gatsby",
+        active: true,
         type: "Monthly",
         allDiscoveryStoriesUnlocked: true,
         revenueCat: {
@@ -142,6 +146,7 @@ export const Subscription: ISubscription = {
         id: "The Prime Shakespeare",
         name: "The Prime Shakespeare",
         type: "Monthly",
+        active: true,
         allDiscoveryStoriesUnlocked: true,
         revenueCat: {
             identifier: "The Prime Shakespeare",
@@ -174,6 +179,7 @@ export const Subscription: ISubscription = {
         id: "The Greatest of All Time",
         name: "The Greatest of All Time",
         type: "Monthly",
+        active: true,
         allDiscoveryStoriesUnlocked: true,
         revenueCat: {
             identifier: "The Greatest of All Time",
@@ -206,6 +212,7 @@ export const Subscription: ISubscription = {
         id: "Enterprise",
         name: "Enterprise",
         type: "Enterprise",
+        active: true,
         allDiscoveryStoriesUnlocked: true,
         revenueCat: {
             identifier: "Enterprise",

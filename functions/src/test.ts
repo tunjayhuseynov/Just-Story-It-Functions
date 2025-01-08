@@ -8,6 +8,7 @@ const adminApp = admin.initializeApp({
 
 
 const msg = adminApp.messaging();
+const icon = "https://firebasestorage.googleapis.com/v0/b/just-story-it.appspot.com/o/FCMImages%2FUpdated%20Logo512.png?alt=media&token=0e8a6296-85a5-4cbd-b2a0-a3ffa2657518";
 
 (async () => {
     try {
@@ -15,7 +16,21 @@ const msg = adminApp.messaging();
             android: {
                 notification: {
                     "icon": "ic_notification",
-                    "imageUrl": "https://juststoryit.net/assets/images/old_logo.png",
+                    "imageUrl": icon,
+                }
+            },
+            apns: {
+                "payload": {
+                    aps: {
+                        "alert": {
+                            title: "You have a new message!",
+                            body: "Tap to reply",
+                        },
+                        "mutable-content": 1
+                    }
+                },
+                "fcmOptions": {
+                    imageUrl: icon
                 }
             },
             token: "",

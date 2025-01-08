@@ -1,15 +1,14 @@
 import { https } from "firebase-functions/v2";
 import { HttpsError } from "firebase-functions/v2/https";
 import { IIncomingDiscoveryStory } from "../../types/discoverStory";
-import { GenerateBufferFromText } from "../../modules/V1/openai/tts";
+import { GenerateBufferFromText } from "../../modules/V2/openai/tts";
 import { UploadBufferAsAudio, UploadTextAsFile } from "../../services/upload";
 import { v1 } from 'uuid'
 import { AdminFunctions } from "../../services/admin";
 import { MoveFile } from "../../services/storage";
 import { IStory } from "../../types/story";
 import { VoiceType } from "../../types/subscription";
-import { GenderType } from "../../types/languages";
-import { openaiApiKey } from "../../modules/V1/openai";
+import { openaiApiKey } from "../../modules/V2/openai";
 
 export const GenerateDiscoveryStory = https.onCall<IIncomingDiscoveryStory>({ maxInstances: 10, concurrency: 1, timeoutSeconds: 540, secrets: [openaiApiKey], memory: "1GiB" }, async (event) => {
     const isAdmin = event.auth?.token["admin"];
@@ -19,14 +18,14 @@ export const GenerateDiscoveryStory = https.onCall<IIncomingDiscoveryStory>({ ma
 
     const storyId = v1()
 
-    const buffer = await GenerateBufferFromText({ text: data.storyText, genderType: data.genderType, model: data.voiceType == "Advanced" ? "hd" : "basic" })
+    const buffer = await GenerateBufferFromText({ text: data.storyText, voice: data.voice, model: data.voiceType == "Advanced" ? "hd" : "basic" })
 
     const storyFileLink = await UploadTextAsFile(data.storyText, "discoveryStories", storyId)
     const { url: audioFileLink, durationInSeconds } = await UploadBufferAsAudio(buffer, "discoveryStories", storyId)
 
     const imageLink = await MoveFile(data.imagePath, `discoveryStories/${storyId}/coverImage.png`)
 
-    const story: IStory & { voiceType: VoiceType, genderType: GenderType, locked: boolean } = {
+    const story: IStory & { voiceType: VoiceType, locked: boolean, genderType: "" } = {
         id: storyId,
         created_at: new Date().getTime(),
         audioLink: audioFileLink,
@@ -40,13 +39,15 @@ export const GenerateDiscoveryStory = https.onCall<IIncomingDiscoveryStory>({ ma
         environments: [],
         characters: [],
         durationInSeconds,
-        genderType: data.genderType,
+        narrationStyle: "Traditional",
+        voice: data.voice,
         voiceType: data.voiceType,
         playlist: [],
         locked: data.locked,
-        dialogues: true,
         languageLevel: "Advanced",
-        voiceModel: data.voiceType === "Advanced" ? "Neural2" : "Standard"
+        voiceModel: data.voiceType === "Advanced" ? "Neural2" : "Standard",
+        version: "v2",
+        genderType: ""
     }
 
     await new AdminFunctions().uploadDiscoveryStory(storyId, story)

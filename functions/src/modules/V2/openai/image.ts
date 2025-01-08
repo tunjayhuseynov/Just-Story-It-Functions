@@ -1,7 +1,7 @@
 import OpenAI from "openai";
 import { openaiApiKey } from ".";
 
-export async function GenerateImageFromText(text: string) {
+export async function GenerateImageFromText(text: string, model?: OpenAI.Images.ImageModel) {
     const openai = new OpenAI({
         apiKey: openaiApiKey.value(),
     });
@@ -11,8 +11,8 @@ export async function GenerateImageFromText(text: string) {
         prompt: text,
         response_format: "b64_json",
         n: 1,
-        model: "dall-e-3",
-        size: "512x512"
+        model: model || "dall-e-3",
+        size: "1024x1024"
     });
 
     const base64 = res.data[0].b64_json;

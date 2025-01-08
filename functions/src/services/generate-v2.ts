@@ -6,7 +6,7 @@ import { IUser } from "../types/user";
 import { UploadBase64AsImage, UploadBufferAsAudio, UploadTextAsFile } from './upload';
 import { GenerateBufferFromText as OpenaiGenerateBufferFromText } from '../modules/V2/openai/tts';
 import { GenerateImageFromText } from '../modules/V2/openai/image';
-import { info } from 'firebase-functions/logger';
+import { info, error } from 'firebase-functions/logger';
 import { SpeechCreateParams } from 'openai/resources/audio/speech';
 import { TNarrationStyle } from '../types/narrationStyles';
 
@@ -54,8 +54,19 @@ export async function GenerateStoryV2({ charaters, environments, storyId, user, 
     })
 
     if (subscription.coverImage && coverImagePrompt) {
-        const imageBase64 = await GenerateImageFromText(coverImagePrompt)
-        coverImageLink = await UploadBase64AsImage(imageBase64, `users/${user.id}`, storyId)
+        try {
+            let imageBase64;
+            try {
+                imageBase64 = await GenerateImageFromText(coverImagePrompt)
+            } catch (err) {
+                error(`Error with initial GenerateImageFromText: ${err}`)
+                imageBase64 = await GenerateImageFromText(coverImagePrompt, "dall-e-2")
+                throw err
+            }
+            coverImageLink = await UploadBase64AsImage(imageBase64, `users/${user.id}`, storyId)
+        } catch (err) {
+            error(`Error in image overall process: ${err}`)
+        }
     }
 
     const storyFileLink = await UploadTextAsFile(story, `users/${user.id}`, storyId)
