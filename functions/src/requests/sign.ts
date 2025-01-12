@@ -16,20 +16,20 @@ export const SignNewUser = auth.user().onCreate(async (userEvent) => {
             name: null,
             subscription: "",
             customCharacters: {
-                "luckyball": {
-                    name: "Luna Evergreen",
-                    description: "Imaginative storyteller with a quill in hand, weaving enchanting tales of wonder.",
-                    id: "luckyball",
-                    image: null
-                }
+                // "luckyball": {
+                //     name: "Luna Evergreen",
+                //     description: "Imaginative storyteller with a quill in hand, weaving enchanting tales of wonder.",
+                //     id: "luckyball",
+                //     image: null
+                // }
             },
             customEnvironments: {
-                "luckyteam": {
-                    name: "Enchanted Forest",
-                    description: "Luna's creative haven, surrounded by ancient trees and vibrant fireflies, where every word becomes a magical journey.",
-                    id: "luckyteam",
-                    image: null
-                }
+                // "luckyteam": {
+                //     name: "Enchanted Forest",
+                //     description: "Luna's creative haven, surrounded by ancient trees and vibrant fireflies, where every word becomes a magical journey.",
+                //     id: "luckyteam",
+                //     image: null
+                // }
             },
             createdAt: new Date().getTime(),
             remaningQuoteInSeconds: 0,

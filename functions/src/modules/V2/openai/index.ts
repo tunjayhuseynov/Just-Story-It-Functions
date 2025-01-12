@@ -31,7 +31,7 @@ export async function GenerateStoryFromText(
 
     const messages: ChatCompletionMessageParam[] = [
         {
-            role: "system", content: promptForSystem
+            role: "system", content: promptForSystem(language)
         },
     ]
 
@@ -39,7 +39,15 @@ export async function GenerateStoryFromText(
 
     const chapterAmount = Math.ceil(minimumWordCount / 550)
 
-    const chapterPrompt = promptForUserInputsAndChapters({ chapterAmount: chapterAmount, narrationStyle, characters: characters, customDescription: customStoryDescriptor, environments: environments, genres: genres })
+    const chapterPrompt = promptForUserInputsAndChapters({
+        chapterAmount: chapterAmount,
+        narrationStyle,
+        characters: characters,
+        customDescription: customStoryDescriptor,
+        environments: environments,
+        genres: genres,
+        storyLangauge: language
+    })
 
     messages.push({ role: "user", content: chapterPrompt })
 
@@ -48,7 +56,6 @@ export async function GenerateStoryFromText(
     if (!chaptersResponse?.content) throw Error("Content is undefined");
 
     const chapters = JSON.parse(chaptersResponse.content) as IUserInputsAndChaptersResponse;
-    info(chapters)
     messages.push(chaptersResponse)
 
     const storyArray: string[] = []
@@ -63,7 +70,7 @@ export async function GenerateStoryFromText(
         messages.push(chapterResponse)
 
         if (minimumWordCount > 200 && chapter.length < (chapterWordAmount - 80) && chapterIndex < 2) {
-            messages.push({ role: "user", content: askExtraWords(chapter, chapterWordAmount) })
+            messages.push({ role: "user", content: askExtraWords(chapter, chapterWordAmount, language) })
 
             const chapterResponse = await RequestChatGPT(messages, aiModel, 0)
             if (!chapterResponse?.content) throw Error("Content is undefined")
@@ -88,7 +95,6 @@ export async function GenerateStoryFromText(
         coverImagePrompt = chapters.coverImagePrompt;
     }
 
-    console.log("Generation done")
     return { title, coverImagePrompt, story: mainStory }
 }
 

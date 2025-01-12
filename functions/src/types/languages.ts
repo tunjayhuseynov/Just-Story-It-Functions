@@ -2,6 +2,19 @@ export type Languages = "en-US" | "es-ES" | "fr-FR" | "de-DE" | "it-IT" | "da-DK
 
 export type LanguageLevel = "Beginner" | "Intermadiate" | "Advanced"
 
+export const LanguageLevelEn: { [name in LanguageLevel]: string } = {
+    Advanced: "Advanced",
+    Beginner: "Beginner",
+    Intermadiate: "Intermadiate"
+}
+
+export const LanguageLevelEs: { [name in LanguageLevel]: string } = {
+    Advanced: "Avanzado",
+    Beginner: "Principiante",
+    Intermadiate: "Intermedio"
+};
+
+
 export type VoiceModels = "Standard" | "Neural2" | "WaveNet"
 
 export type GenderType = "MALE" | "FEMALE"

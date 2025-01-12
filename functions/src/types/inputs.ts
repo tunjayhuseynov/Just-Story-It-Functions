@@ -22,7 +22,7 @@ export type CustomStoryDescriptor = string
 
 export const LanguageName: { [n in Languages]: string } = {
     "en-US": "English",
-    "es-ES": "Spanish",
+    "es-ES": "Español",
     "fr-FR": "French",
     "da-DK": "Danish",
     "de-DE": "German",

@@ -1,6 +1,7 @@
 import OpenAI from "openai";
 import { IGenerateStoryFromText, openaiApiKey } from ".";
 import { ChatCompletionMessageParam } from "openai/resources";
+// import { HttpsError } from "firebase-functions/https";
 
 export async function RequestChatGPT(messages: ChatCompletionMessageParam[], aiModel: IGenerateStoryFromText["aiModel"], attemptCount: number): Promise<OpenAI.Chat.Completions.ChatCompletionMessage | undefined> {
     try {
@@ -8,10 +9,21 @@ export async function RequestChatGPT(messages: ChatCompletionMessageParam[], aiM
             apiKey: openaiApiKey.value(),
         });
 
+        // const checkRepsonse = await openai.moderations.create({
+        //     input: messages.filter(message => message.content && (message.role === "user" || message.role === "system")).map(message => (message.content as string)),
+        //     model: "omni-moderation-latest"
+        // })
+
+        // const detection = checkRepsonse.results.find(value => value.flagged === true);
+
+        // if (detection) {
+        //     throw new HttpsError("failed-precondition", `Harmful content is detected: ${Object.entries(detection.categories).find(entry => entry[1] === true)?.[0]}`)
+        // }
+
         const response = await openai.chat.completions.create({
             model: aiModel,
             messages,
-            temperature: 0.4
+            temperature: 0.6
         })
 
 

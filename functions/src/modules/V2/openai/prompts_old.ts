@@ -1,6 +1,6 @@
 import { Languages } from '../../../types/languages';
 import { Character, Environment, LanguageName } from '../../../types/inputs';
-import { NarrationStyle, TNarrationStyle } from '../../../types/narrationStyles';
+import { NarrationStyleEn, TNarrationStyle } from '../../../types/narrationStyles';
 
 
 // Prompt for System
@@ -38,7 +38,7 @@ c: The genres of the story should be ${genres.join(", ")}
 
 d: ${customDescription ?? "There is no optional input to describe the way the story is supposed to be, you can be fully creative"}
 
-f: The narration style you must use is ${narrationStyle}. The explanation of this style: ${NarrationStyle[narrationStyle]}
+f: The narration style you must use is ${narrationStyle}. The explanation of this style: ${NarrationStyleEn[narrationStyle]}
 
 You have to give me ${chapterAmount} chapter title for a story based on these inputs.
 
