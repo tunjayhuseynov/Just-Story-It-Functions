@@ -15,18 +15,14 @@ export async function GenerateBufferFromText({ text, voice, model }: IProps) {
 
     const textArray: string[] = ParagraphSplitter(text, CHARACTER_LIMIT)
 
-    info("Text On TTS Generate Function:")
-    info(text)
-
-    info("Text Array Before init:")
-    info(textArray)
+    info("TTS Generate Function is working")
+    info(`TTS Paramteres: Voice - ${voice}; Model - ${model}`)
 
 
     const buffers = []
     for (const text of textArray) {
         const buffer = await TextToSpeech({ text, voice, model })
-        info("new buffer:")
-        info(buffer.byteLength)
+        info(`TTS produces new buffer: ${buffer.byteLength} bytes`)
         buffers.push(buffer)
     }
 

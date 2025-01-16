@@ -32,8 +32,8 @@ interface IResponse {
 export const GetStoryV2 = onCall<IRequest, Promise<IResponse>>({ invoker: "public", maxInstances: 10, timeoutSeconds: 540, memory: "512MiB", secrets: [openaiApiKey], concurrency: 10 }, async (request) => {
     try {
         const uid = request.auth?.uid
-        info("Language:")
-        info(request.data.language)
+        info(`UID: ${uid}`)
+        info(`Input: ${request.data}`)
 
         const secondToWordDelta = LangaugeSecondsToWordsDeltaIndex[request.data.language];
 

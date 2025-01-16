@@ -37,8 +37,8 @@ interface IGenerateStoryResponse {
 export async function GenerateStoryV2({ charaters, environments, storyId, user, genres, language, languageLevel, wordCount, customStoryDescriptor, referanceStory, narrationStyle, voice }: IGenerateStoryProps): Promise<IGenerateStoryResponse> {
     const subscription = Subscription[user.subscription as ISubscriptionName] ?? Subscription["The Little Prince"];
     let coverImageLink = ""
-    info("Word count:")
-    info(wordCount)
+    info(`Word count: ${wordCount}`)
+
     const { story, title, coverImagePrompt } = await GenerateStoryFromText({
         aiModel: subscription.gptModel,
         characters: charaters,
@@ -72,7 +72,7 @@ export async function GenerateStoryV2({ charaters, environments, storyId, user, 
     const storyFileLink = await UploadTextAsFile(story, `users/${user.id}`, storyId)
 
     const buffer = await OpenaiGenerateBufferFromText({ text: story, voice, model: subscription.voicType == "Advanced" ? "hd" : "basic" })
-
+    info(`Total Audio Size: ${((buffer.byteLength / 1024) / 1024).toFixed(2)} MB`)
     const { url: audioFileLink, durationInSeconds } = await UploadBufferAsAudio(buffer, `users/${user.id}`, storyId)
 
 

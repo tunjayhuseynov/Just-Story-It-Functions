@@ -1,4 +1,4 @@
-import { IChapterResponse, IUserInputsAndChaptersResponse, askExtraWords, promptForEachChapter, promptForSystem, promptForUserInputsAndChapters } from './prompts';
+import { IChapterResponse, IUserInputsAndChaptersResponse, askExtraWords, promptForEachChapter, promptForSystem, promptForUserInputsAndChapters } from './prompts/index';
 import { ReferanceStory } from "../../../types/inputs";
 import type { Character, CustomStoryDescriptor, Environment } from "../../../types/inputs";
 import type { LanguageLevel, Languages } from "../../../types/languages";
@@ -57,7 +57,8 @@ export async function GenerateStoryFromText(
 
     const chapters = JSON.parse(chaptersResponse.content) as IUserInputsAndChaptersResponse;
     messages.push(chaptersResponse)
-
+    info(`Chaperts: ${chapters}`)
+    
     const storyArray: string[] = []
 
     let chapterIndex = 0

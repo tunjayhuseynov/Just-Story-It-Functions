@@ -1,4 +1,3 @@
-import { info } from "firebase-functions/logger";
 import OpenAI from "openai";
 import { openaiApiKey } from "..";
 import { SpeechCreateParams } from "openai/resources/audio/speech";
@@ -15,11 +14,6 @@ export async function TextToSpeech({ text, voice, model }: IProps): Promise<Buff
     const openai = new OpenAI({
         apiKey: openaiApiKey.value(),
     });
-
-
-
-    info("Text On TTS:")
-    info(text)
 
     const mp3 = await openai.audio.speech.create({
         model: model === "basic" ? "tts-1" : "tts-1-hd",
