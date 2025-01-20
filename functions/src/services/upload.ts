@@ -14,9 +14,10 @@ export const UploadBufferAsAudio = async (buffer: Buffer, userId: string, storyI
     const duration = await getMP3Duration(buffer)
 
     await file.save(buffer, {
-        contentType: "audio/mpeg", metadata: {
+        contentType: "audio/mpeg", 
+        metadata: {
             duration
-        }
+        },
     })
 
     return {

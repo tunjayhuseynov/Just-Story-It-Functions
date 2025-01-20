@@ -23,7 +23,7 @@ export async function RequestChatGPT(messages: ChatCompletionMessageParam[], aiM
         const response = await openai.chat.completions.create({
             model: aiModel,
             messages,
-            temperature: 0.6
+            temperature: 0.5
         })
 
 

@@ -53,11 +53,19 @@ export async function GenerateStoryV2({ charaters, environments, storyId, user, 
         narrationStyle
     })
 
+    const storyFileLink = await UploadTextAsFile(story, `users/${user.id}`, storyId)
+    info("Text Geneartion is finished!")
+    
+    const buffer = await OpenaiGenerateBufferFromText({ text: story, voice, model: subscription.voicType == "Advanced" ? "hd" : "basic" })
+    info(`Total Audio Size: ${((buffer.byteLength / 1024) / 1024).toFixed(2)} MB`)
+    const { url: audioFileLink, durationInSeconds } = await UploadBufferAsAudio(buffer, `users/${user.id}`, storyId)
+    
     if (subscription.coverImage && coverImagePrompt) {
         try {
             let imageBase64;
             try {
                 imageBase64 = await GenerateImageFromText(coverImagePrompt)
+                info("Image is generated!")
             } catch (err) {
                 error(`Error with initial GenerateImageFromText: ${err}`)
                 imageBase64 = await GenerateImageFromText(coverImagePrompt, "dall-e-2")
@@ -68,13 +76,6 @@ export async function GenerateStoryV2({ charaters, environments, storyId, user, 
             error(`Error in image overall process: ${err}`)
         }
     }
-
-    const storyFileLink = await UploadTextAsFile(story, `users/${user.id}`, storyId)
-
-    const buffer = await OpenaiGenerateBufferFromText({ text: story, voice, model: subscription.voicType == "Advanced" ? "hd" : "basic" })
-    info(`Total Audio Size: ${((buffer.byteLength / 1024) / 1024).toFixed(2)} MB`)
-    const { url: audioFileLink, durationInSeconds } = await UploadBufferAsAudio(buffer, `users/${user.id}`, storyId)
-
 
     return {
         storyTitle: title,

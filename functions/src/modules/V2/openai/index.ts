@@ -57,7 +57,7 @@ export async function GenerateStoryFromText(
 
     const chapters = JSON.parse(chaptersResponse.content) as IUserInputsAndChaptersResponse;
     messages.push(chaptersResponse)
-    info(`Chaperts: ${chapters}`)
+    info(`Chaperts: ${JSON.stringify(chapters)}`)
     
     const storyArray: string[] = []
 

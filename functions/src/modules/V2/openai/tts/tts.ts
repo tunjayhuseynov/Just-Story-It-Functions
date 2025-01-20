@@ -10,7 +10,7 @@ interface IProps {
 
 
 export async function TextToSpeech({ text, voice, model }: IProps): Promise<Buffer> {
-    if (text.length >= 5000) throw new Error("Text's length must be less than 5000 characters")
+    if (text.length >= 4096) throw new Error("Text's length must be less than 5000 characters")
     const openai = new OpenAI({
         apiKey: openaiApiKey.value(),
     });

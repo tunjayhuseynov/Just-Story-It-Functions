@@ -29,11 +29,11 @@ interface IResponse {
 }
 
 // We may split GetStory functions into 2 parts. GetStory for 12 minutes and under, and GetStory for 13 minutes and above
-export const GetStoryV2 = onCall<IRequest, Promise<IResponse>>({ invoker: "public", maxInstances: 10, timeoutSeconds: 540, memory: "512MiB", secrets: [openaiApiKey], concurrency: 10 }, async (request) => {
+export const GetStoryV2 = onCall<IRequest, Promise<IResponse>>({ invoker: "public", cpu: 6, timeoutSeconds: 3600, memory: "16GiB", secrets: [openaiApiKey], concurrency: 500 }, async (request) => {
     try {
         const uid = request.auth?.uid
         info(`UID: ${uid}`)
-        info(`Input: ${request.data}`)
+        info(`Input: ${JSON.stringify(request.data)}`)
 
         const secondToWordDelta = LangaugeSecondsToWordsDeltaIndex[request.data.language];
 
