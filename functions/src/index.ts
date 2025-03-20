@@ -5,9 +5,10 @@ import * as Story from "./requests/story";
 import * as Sign from "./requests/sign";
 import * as RC from "./requests/revenueCat";
 import { deleteTriggerPlaylist, updateTriggerPlaylistToStory, updateTriggerStoryToPlaylist } from './requests/playlist';
-import { SendVerificationLink, SendVerificationLinkOnSignup } from './requests/email/verifyLink';
+import { SendVerificationLink, SendVerificationLinkOnSignup, SendVerificationLinkOnSignupWhenCreated } from './requests/email/verifyLink';
 import { SendWelcomeCron } from './requests/email/welcome';
 import { SendResetPassword } from './requests/email/resetPassword';
+import { GetStoryV3 } from './requests/story-v3';
 // import * as Migration from "./requests/migration";
 
 
@@ -21,6 +22,9 @@ export const get = {
     story: Story.GetStory,
     v2: {
         story: GetStoryV2
+    },
+    v3: {
+        story: GetStoryV3
     }
 }
 
@@ -39,6 +43,13 @@ export const sign = {
         user: Sign.SignNewUser
     }
 }
+
+export const convert = {
+    new: {
+        anonym: Sign.ConvertNewUserFromAnonym
+    }
+}
+
 export const deletion = {
     user: Sign.DeleteUser
 }
@@ -63,7 +74,8 @@ export const automated = {
     email: {
         verification: {
             call: SendVerificationLink,
-            registration: SendVerificationLinkOnSignup
+            registration: SendVerificationLinkOnSignup,
+            signupWithEmail: SendVerificationLinkOnSignupWhenCreated
         },
         reset: {
             password: SendResetPassword

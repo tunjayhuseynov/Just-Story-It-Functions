@@ -35,6 +35,45 @@ export async function AddStoryToUser(user: IUser, story: IStory) {
     return await UpdateRemainingQuote(user, story)
 }
 
+
+export async function AddLoadingStoryToUser(user: IUser, storyId: string) {
+    const historyCrud = new AdminCrud<IUserStoryHistory>(Collections.Users, { doc: user.id, collection: Collections.StoryHistories })
+
+    const data: IUserStoryHistory = {
+        version: "v2",
+        status: "Loading",
+        id: storyId,
+        story: null,
+        userId: user.id,
+        storyGenerationSetAt: null,
+        createdAt: new Date().getTime()
+    }
+
+    await historyCrud.Create(data, storyId)
+}
+
+export async function ConvertLoadingStoryToReadyStory(user: IUser, story: IStory) {
+    const historyCrud = new AdminCrud<IUserStoryHistory>(Collections.Users, { doc: user.id, collection: Collections.StoryHistories })
+
+    await historyCrud.Update({
+        id: story.id,
+        story: story,
+        status: "Ready",
+        storyGenerationSetAt: new Date().getTime()
+    })
+
+    return await UpdateRemainingQuote(user, story)
+}
+
+export async function ConvertLoadingStoryToFailedStory(userId: string, storyId: string) {
+    const historyCrud = new AdminCrud<IUserStoryHistory>(Collections.Users, { doc: userId, collection: Collections.StoryHistories })
+
+    await historyCrud.Update({
+        id: storyId,
+        status: "Failed"
+    })
+}
+
 async function UpdateRemainingQuote(user: IUser, story: IStory) {
     const crud = new AdminCrud<IUser>(Collections.Users)
 

@@ -2,9 +2,10 @@ import { HttpsError, onCall, } from "firebase-functions/https";
 import { brevoApiKey, SendVerificationLinkEmail } from "../../services/email";
 import { getUserFromDB } from "../../services/user";
 import { logger } from "firebase-functions/v2";
-import { onDocumentUpdated } from "firebase-functions/firestore";
+import { onDocumentCreated, onDocumentUpdated } from "firebase-functions/firestore";
 import { IUser } from "../../types/user";
 import { isValidEmail } from "../../utils";
+import { adminApp } from "../../admin";
 
 
 export const SendVerificationLink = onCall({ secrets: [brevoApiKey] }, async (req) => {
@@ -31,10 +32,32 @@ export const SendVerificationLinkOnSignup = onDocumentUpdated({ document: "Users
         const prevData = event.data?.before.data() as IUser | undefined
 
         if (!!prevData && currentData.username != prevData.username && isValidEmail(currentData.username)) {
-            await SendVerificationLinkEmail(currentData.username)
-            logger.info(`Verification Email is sent to ${currentData.username}`)
+            const userRecord = await adminApp.auth().getUserByEmail(currentData.username)
+            if (userRecord.providerData.some(data => data.providerId === "password")) {
+                await SendVerificationLinkEmail(currentData.username)
+                logger.info(`Verification Email is sent to ${currentData.username}`)
+            }
         } else {
             logger.error(`Validation issue on SendVerificationLinkOnSignup: Current: ${currentData}; Prev: ${prevData}`)
+        }
+    } catch (error) {
+        logger.error(`Verification Email Error: ${error}`)
+        throw error
+    }
+})
+
+export const SendVerificationLinkOnSignupWhenCreated = onDocumentCreated({ document: "Users/{docId}", secrets: [brevoApiKey] }, async (event) => {
+    try {
+        const currentData = event.data?.data() as IUser
+
+        if (isValidEmail(currentData.username)) {
+            const userRecord = await adminApp.auth().getUserByEmail(currentData.username)
+            if (userRecord.providerData.some(data => data.providerId === "password")) {
+                await SendVerificationLinkEmail(currentData.username)
+                logger.info(`Verification Email is sent to ${currentData.username}`)
+            }
+        } else {
+            logger.info(`Validation has not been satisfied on SendVerificationLinkOnSignupWhenCreated: Current data: ${JSON.stringify(currentData)};`)
         }
     } catch (error) {
         logger.error(`Verification Email Error: ${error}`)

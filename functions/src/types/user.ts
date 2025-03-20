@@ -18,7 +18,10 @@ export interface IUser {
     offers: { [storeProductId: string]: { storeProductId: string, offerProductId: string } }
     createdAt: number,
     hasEverSubscribed: boolean;
-    notificationId?: string
+    notificationId?: string,
+    registeredAt?: number | null,
+    isDeleted?: boolean | null,
+    deletedAt?: number | null,
 }
 
 export interface IUserSubscriptionHistory {
@@ -29,9 +32,16 @@ export interface IUserSubscriptionHistory {
     createdAt: number,
 }
 
-export interface IUserStoryHistory {
+export type IUserStoryHistory = ({ version?: "v1" } & {
     id: string
     userId: string,
     story: IStory,
     createdAt: number
-}
+}) | ({ version: "v2" } & {
+    id: string
+    userId: string,
+    story: IStory | null,
+    createdAt: number,
+    storyGenerationSetAt: number | null,
+    status: "Loading" | "Ready" | "Failed"
+});
