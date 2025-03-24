@@ -1,16 +1,17 @@
-import { HttpsError, onCall } from "firebase-functions/v2/https";
-import { Character, CustomStoryDescriptor, Environment, ReferanceStory } from "../types/inputs";
-import { LanguageLevel, Languages, LangaugeSecondsToWordsDeltaIndex } from "../types/languages";
-import { AddLoadingStoryToUser, ConvertLoadingStoryToFailedStory, ConvertLoadingStoryToReadyStory, getUserFromDB, isQuoteSufficient } from "../services/user";
-import { GenerateStoryV3 } from "../services/generate-v3";
+import { HttpsError, onRequest } from "firebase-functions/v2/https";
+import { Character, CustomStoryDescriptor, Environment, ReferanceStory } from "../../types/inputs";
+import { LanguageLevel, Languages, LangaugeSecondsToWordsDeltaIndex } from "../../types/languages";
+import { AddLoadingStoryToUser, ConvertLoadingStoryToFailedStory, ConvertLoadingStoryToReadyStory, getUserFromDB, isQuoteSufficient } from "../../services/user";
+import { GenerateStoryV3 } from "../../services/generate-v3-opensource";
 import { v1 as uuid } from 'uuid'
-import { IStory } from "../types/story";
+import { IStory } from "../../types/story";
 import { error, info } from 'firebase-functions/logger';
-import { openaiApiKey } from "../modules/V3/openai";
-import { TNarrationStyle } from "../types/narrationStyles";
+import { openaiApiKey, openrouterApiKey } from "../../modules/V3/opensource";
+import { TNarrationStyle } from "../../types/narrationStyles";
 import { SpeechCreateParams } from "openai/resources/audio/speech";
-import { UnauthorizedError } from "../utils/errors";
-import { falAIKey } from "../modules/V3/fal";
+import { UnauthorizedError } from "../../utils/errors";
+import cors from 'cors';
+const corsHandler = cors({ origin: true });
 
 interface IRequest {
     genres: string[],
@@ -30,15 +31,18 @@ interface IResponse {
     newQuote: number
 }
 
+const MY_UID = "czgfMSvrKrd7yqWgBd63hySparz1"
+
 // We may split GetStory functions into 2 parts. GetStory for 12 minutes and under, and GetStory for 13 minutes and above
-export const GetStoryV3 = onCall<IRequest, Promise<IResponse>>({ invoker: "public", cpu: 6, timeoutSeconds: 3600, memory: "16GiB", secrets: [openaiApiKey, falAIKey], concurrency: 500 }, async (request) => {
+export const GetStoryV3OpenSource = onRequest({ maxInstances: 10, timeoutSeconds: 300, memory: "512MiB", secrets: [openaiApiKey, openrouterApiKey] }, async (req, res) => corsHandler(req, res, async () => {
     const storyId = uuid()
-    const uid = request.auth?.uid
+    const request = req.body as IRequest
+    const uid = MY_UID
     try {
         info(`UID: ${uid}`)
-        info(`Input: ${JSON.stringify(request.data)}`)
+        info(`Input: ${JSON.stringify(request)}`)
 
-        const secondToWordDelta = LangaugeSecondsToWordsDeltaIndex[request.data.language];
+        const secondToWordDelta = LangaugeSecondsToWordsDeltaIndex[request.language];
 
         if (!uid) throw new UnauthorizedError("Authorization is mandatory")
 
@@ -47,7 +51,7 @@ export const GetStoryV3 = onCall<IRequest, Promise<IResponse>>({ invoker: "publi
         if (!user) throw new UnauthorizedError("There is no user with such an id")
 
 
-        if (await isQuoteSufficient(user, request.data.averageDurationInSeconds)) throw new Error("No enough usage")
+        if (await isQuoteSufficient(user, request.averageDurationInSeconds)) throw new Error("No enough usage")
 
         await AddLoadingStoryToUser(user, storyId)
         info("Loading story to user is finished!")
@@ -55,16 +59,16 @@ export const GetStoryV3 = onCall<IRequest, Promise<IResponse>>({ invoker: "publi
         const { audioFileLink, coverImageLink, storyFileLink, storyTitle, durationInSeconds, voiceModelType } = await GenerateStoryV3({
             storyId,
             user,
-            language: request.data.language,
-            genres: request.data.genres,
-            languageLevel: request.data.languageLevel,
-            wordCount: Math.ceil(request.data.averageDurationInSeconds * secondToWordDelta),
-            customStoryDescriptor: request.data.customStoryDescriptor,
-            referanceStory: request.data.referanceStory,
-            charaters: request.data.characters,
-            environments: request.data.environments,
-            narrationStyle: request.data.narrationStyle,
-            voice: request.data.voice
+            language: request.language,
+            genres: request.genres,
+            languageLevel: request.languageLevel,
+            wordCount: Math.ceil(request.averageDurationInSeconds * secondToWordDelta),
+            customStoryDescriptor: request.customStoryDescriptor,
+            referanceStory: request.referanceStory,
+            charaters: request.characters,
+            environments: request.environments,
+            narrationStyle: request.narrationStyle,
+            voice: request.voice
         })
 
         const response: IResponse = {
@@ -75,19 +79,19 @@ export const GetStoryV3 = onCall<IRequest, Promise<IResponse>>({ invoker: "publi
                 audioLink: audioFileLink,
                 coverImage: coverImageLink,
                 images: [],
-                genres: request.data.genres,
-                language: request.data.language,
+                genres: request.genres,
+                language: request.language,
                 storyLink: storyFileLink,
                 title: storyTitle,
-                customStoryDescriptor: request.data.customStoryDescriptor,
-                environments: request.data.environments,
-                characters: request.data.characters,
+                customStoryDescriptor: request.customStoryDescriptor,
+                environments: request.environments,
+                characters: request.characters,
                 durationInSeconds,
                 playlist: [],
-                languageLevel: request.data.languageLevel,
+                languageLevel: request.languageLevel,
                 voiceModel: voiceModelType,
-                narrationStyle: request.data.narrationStyle,
-                voice: request.data.voice,
+                narrationStyle: request.narrationStyle,
+                voice: request.voice,
                 version: "v2"
             }
         }
@@ -108,4 +112,4 @@ export const GetStoryV3 = onCall<IRequest, Promise<IResponse>>({ invoker: "publi
         error(msg)
         throw new HttpsError("unknown", msg);
     }
-})
+}))

@@ -7,15 +7,6 @@ interface IProps {
     voice: SpeechCreateParams["voice"],
     model: "basic" | "hd"
 }
-const narrationStyle = `Affect: A gentle, curious narrator with an American accent, guiding a magical, adventure through a fictional world.
-
-Tone: Magical, warm, and inviting, creating a sense of wonder and excitement for listeners.
-
-Pacing: Steady and measured, with slight pauses to emphasize magical moments and maintain the storytelling flow.
-
-Emotion: Calm, follows the emotion of the story.
-
-Pronunciation: Clear and precise, with an emphasis on storytelling, ensuring the words are easy to follow and enchanting to listen to.`
 
 
 export async function TextToSpeech({ text, voice, model }: IProps): Promise<Buffer> {
@@ -24,14 +15,10 @@ export async function TextToSpeech({ text, voice, model }: IProps): Promise<Buff
         apiKey: openaiApiKey.value(),
     });
 
-    
-
     const mp3 = await openai.audio.speech.create({
-        model: "gpt-4o-mini-tts",
+        model: model === "basic" ? "tts-1" : "tts-1-hd",
         voice: voice,
         input: text,
-        speed: 0.9,
-        instructions: narrationStyle,
         response_format: "mp3",
     });
 

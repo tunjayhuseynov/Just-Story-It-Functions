@@ -1,11 +1,11 @@
 import { Character, Environment, ReferanceStory } from '../types/inputs';
-import { GenerateStoryFromText } from "../modules/V2/openai";
+import { GenerateStoryFromText } from "../modules/V3/opensource";
 import { LanguageLevel, Languages, VoiceModels } from "../types/languages";
 import { ISubscriptionName, Subscription } from "../types/subscription";
 import { IUser } from "../types/user";
 import { UploadBase64AsImage, UploadBufferAsAudio, UploadTextAsFile } from './upload';
-import { GenerateBufferFromText as OpenaiGenerateBufferFromText } from '../modules/V2/openai/tts';
-import { GenerateImageFromText } from '../modules/V3/fal/image';
+import { GenerateBufferFromText as OpenaiGenerateBufferFromText } from '../modules/V3/opensource/tts';
+import { GenerateImageFromText } from '../modules/V3/opensource/image';
 import { info, error } from 'firebase-functions/logger';
 import { SpeechCreateParams } from 'openai/resources/audio/speech';
 import { TNarrationStyle } from '../types/narrationStyles';
@@ -68,7 +68,7 @@ export async function GenerateStoryV3({ charaters, environments, storyId, user, 
                 info("Image is generated!")
             } catch (err) {
                 error(`Error with initial GenerateImageFromText: ${err}`)
-                imageBase64 = await GenerateImageFromText(coverImagePrompt)
+                imageBase64 = await GenerateImageFromText(coverImagePrompt, "dall-e-2")
                 throw err
             }
             coverImageLink = await UploadBase64AsImage(imageBase64, `users/${user.id}`, storyId)

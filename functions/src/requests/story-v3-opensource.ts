@@ -2,15 +2,14 @@ import { HttpsError, onCall } from "firebase-functions/v2/https";
 import { Character, CustomStoryDescriptor, Environment, ReferanceStory } from "../types/inputs";
 import { LanguageLevel, Languages, LangaugeSecondsToWordsDeltaIndex } from "../types/languages";
 import { AddLoadingStoryToUser, ConvertLoadingStoryToFailedStory, ConvertLoadingStoryToReadyStory, getUserFromDB, isQuoteSufficient } from "../services/user";
-import { GenerateStoryV3 } from "../services/generate-v3";
+import { GenerateStoryV3 } from "../services/generate-v3-opensource";
 import { v1 as uuid } from 'uuid'
 import { IStory } from "../types/story";
 import { error, info } from 'firebase-functions/logger';
-import { openaiApiKey } from "../modules/V3/openai";
+import { openaiApiKey, openrouterApiKey } from "../modules/V3/opensource";
 import { TNarrationStyle } from "../types/narrationStyles";
 import { SpeechCreateParams } from "openai/resources/audio/speech";
 import { UnauthorizedError } from "../utils/errors";
-import { falAIKey } from "../modules/V3/fal";
 
 interface IRequest {
     genres: string[],
@@ -31,7 +30,7 @@ interface IResponse {
 }
 
 // We may split GetStory functions into 2 parts. GetStory for 12 minutes and under, and GetStory for 13 minutes and above
-export const GetStoryV3 = onCall<IRequest, Promise<IResponse>>({ invoker: "public", cpu: 6, timeoutSeconds: 3600, memory: "16GiB", secrets: [openaiApiKey, falAIKey], concurrency: 500 }, async (request) => {
+export const GetStoryV3OpenSource = onCall<IRequest, Promise<IResponse>>({ invoker: "public", cpu: 6, timeoutSeconds: 3600, memory: "16GiB", secrets: [openaiApiKey, openrouterApiKey], concurrency: 500 }, async (request) => {
     const storyId = uuid()
     const uid = request.auth?.uid
     try {

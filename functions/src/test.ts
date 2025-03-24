@@ -7,6 +7,7 @@ const adminApp = admin.initializeApp({
 })
 
 
+
 const msg = adminApp.messaging();
 const icon = "https://firebasestorage.googleapis.com/v0/b/just-story-it.appspot.com/o/FCMImages%2FUpdated%20Logo512.png?alt=media&token=0e8a6296-85a5-4cbd-b2a0-a3ffa2657518";
 

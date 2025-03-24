@@ -1,7 +1,7 @@
 import { GetStoryV2 } from './requests/story-v2';
 import { DeleteDiscoveryStory, GenerateDiscoveryStory } from './requests/admin/discoveryStory';
 import * as Story from "./requests/story";
-// import * as TestStory from "./requests/test/story";
+import * as TestStory from "./requests/test/story-v3-opensource";
 import * as Sign from "./requests/sign";
 import * as RC from "./requests/revenueCat";
 import { deleteTriggerPlaylist, updateTriggerPlaylistToStory, updateTriggerStoryToPlaylist } from './requests/playlist';
@@ -12,11 +12,11 @@ import { GetStoryV3 } from './requests/story-v3';
 // import * as Migration from "./requests/migration";
 
 
-// export const test = {
-//     get: {
-//         story: TestStory.GetStory
-//     }
-// }
+export const test = {
+    get: {
+        story: TestStory.GetStoryV3OpenSource
+    }
+}
 
 export const get = {
     story: Story.GetStory,
@@ -24,7 +24,7 @@ export const get = {
         story: GetStoryV2
     },
     v3: {
-        story: GetStoryV3
+        story: GetStoryV3,
     }
 }
 
