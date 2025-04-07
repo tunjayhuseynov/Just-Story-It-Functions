@@ -11,8 +11,8 @@ export async function GenerateImageFromText(text: string) {
     const result = await fal.subscribe("fal-ai/flux/schnell", {
         input: {
             image_size: {
-                width: 512,
-                height: 512
+                width: 1024,
+                height: 1024
             },
             num_images: 1,
             prompt: text
